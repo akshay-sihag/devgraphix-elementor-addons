@@ -1,0 +1,6 @@
+/**
+ * Devgraphix Elementor Addons — frontend styles.
+ *
+ * Shared/base styles only. Each widget ships its own scoped stylesheet under
+ * assets/css/widgets/ (loaded via the widget's get_style_depends()).
+ */

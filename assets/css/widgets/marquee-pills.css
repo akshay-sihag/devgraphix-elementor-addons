@@ -1,0 +1,106 @@
+/**
+ * Devgraphix Elementor Addons — "Marquee Pills" widget.
+ *
+ * A seamless, continuously-scrolling row of icon + text pills. PHP renders the
+ * pills once; product-cards-style JS (marquee-pills.js) repeats that set until
+ * it is wider than the container, then mirrors the whole thing so the track is
+ * two identical, screen-filling halves. The track animates translateX(0 → -50%)
+ * forever — half 2 lands exactly where half 1 began, so the loop never gaps or
+ * resets, no matter how few pills there are. JS sets the duration (scaled with
+ * the number of copies) so the pixel speed stays constant, and adds the
+ * --ready class once both halves exist.
+ */
+
+.dgx-pills {
+	overflow: hidden;
+	width: 100%;
+}
+
+.dgx-pills__track {
+	display: flex;
+	width: max-content;
+	flex-wrap: nowrap;
+	will-change: transform;
+}
+
+/* Animation runs only once JS has built two equal, screen-filling halves. */
+.dgx-pills--ready .dgx-pills__track {
+	animation: dgx-pills-scroll 40s linear infinite;
+}
+
+@keyframes dgx-pills-scroll {
+	from { transform: translateX(0); }
+	to   { transform: translateX(-50%); }
+}
+
+/* Scroll the other way. */
+.dgx-pills--reverse .dgx-pills__track {
+	animation-direction: reverse;
+}
+
+/* Pause on hover (opt-in). */
+.dgx-pills--pause:hover .dgx-pills__track {
+	animation-play-state: paused;
+}
+
+/* Soft fade at both edges (opt-in). */
+.dgx-pills--fade {
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+	mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+/* ---- Pill ---------------------------------------------------------------- */
+.dgx-pills__item {
+	flex-shrink: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	margin-right: var(--dgx-pills-gap, 16px);
+	padding: 14px 22px 14px 18px;
+	background: rgba(255, 255, 255, 0.7);
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+	color: #0e1a26;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+	text-decoration: none;
+	/* Border + radius are set from the Style tab (with matching defaults). */
+}
+
+.dgx-pills__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 36px;
+	height: 36px;
+	border-radius: 999px;
+	background: #ffffff;
+	border: 1px solid #dfedfb;
+	color: #435970;
+}
+
+.dgx-pills__icon svg {
+	width: 18px;
+	height: 18px;
+	fill: currentColor;
+}
+
+.dgx-pills__icon i {
+	font-size: 18px;
+	line-height: 1;
+	color: currentColor;
+}
+
+.dgx-pills__label {
+	display: inline-block;
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+	.dgx-pills--ready .dgx-pills__track {
+		animation: none;
+	}
+}

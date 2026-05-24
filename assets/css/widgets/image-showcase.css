@@ -1,0 +1,293 @@
+/* =========================================================================
+ * Devgraphix — Image Showcase
+ * A full-bleed photo card with freely-positionable overlay layers. The photo
+ * lives in an inner clip (rounded, overflow hidden); the floating layers are
+ * siblings of that clip, so they can sit anywhere — any of 9 anchor points,
+ * nudged on X/Y, and rotated — and may bleed past the photo edge.
+ * Layout primitives live here; colours/typography/positions carry matching
+ * control defaults so the Style panel reflects what renders.
+ * ========================================================================= */
+
+/* Registered so the hover lift can animate (older browsers just snap). */
+@property --lift {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: 0px;
+}
+
+.dgx-showcase {
+	position: relative;
+	min-height: 600px;
+	box-sizing: border-box;
+}
+
+.dgx-showcase *,
+.dgx-showcase *::before,
+.dgx-showcase *::after {
+	box-sizing: border-box;
+}
+
+/* ----- Photo (inner clip) ------------------------------------------------ */
+.dgx-showcase__media {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	overflow: hidden;
+	border-radius: 28px;
+}
+
+/* The photo is painted as a background-image on this layer (not an <img>) so
+ * theme rules like `img { height: auto }` can never break the fill — the
+ * background always covers/contains the box at any widget height. */
+.dgx-showcase__img {
+	position: absolute;
+	inset: 0;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.dgx-showcase__ph {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #dfedfb;
+	color: rgba(14, 26, 38, 0.4);
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 12px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.dgx-showcase__overlay {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, transparent 30%, transparent 65%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* ----- Free-positioning system ------------------------------------------- */
+/* Each layer is absolutely placed; the anchor class sets which edges it pins
+ * to (and whether it centres on an axis via --ax/--ay), then a single
+ * transform composes the centring, the user X/Y nudge, a hover lift and the
+ * rotation. */
+.dgx-showcase__badge,
+.dgx-showcase__stat,
+.dgx-showcase__stat-label,
+.dgx-showcase__chip,
+.dgx-showcase__card {
+	position: absolute;
+	z-index: 3;
+	transform:
+		translate(
+			calc(var(--ax, 0) * -50% + var(--tx, 0px)),
+			calc(var(--ay, 0) * -50% + var(--ty, 0px) + var(--lift, 0px))
+		)
+		rotate(var(--rot, 0deg));
+}
+
+.dgx-anchor--top-left    { top: 0;   left: 0;   right: auto; bottom: auto; --ax: 0; --ay: 0; }
+.dgx-anchor--top-center  { top: 0;   left: 50%; right: auto; bottom: auto; --ax: 1; --ay: 0; }
+.dgx-anchor--top-right   { top: 0;   right: 0;  left: auto;  bottom: auto; --ax: 0; --ay: 0; }
+.dgx-anchor--middle-left   { top: 50%; left: 0;   right: auto; bottom: auto; --ax: 0; --ay: 1; }
+.dgx-anchor--middle-center { top: 50%; left: 50%; right: auto; bottom: auto; --ax: 1; --ay: 1; }
+.dgx-anchor--middle-right  { top: 50%; right: 0;  left: auto;  bottom: auto; --ax: 0; --ay: 1; }
+.dgx-anchor--bottom-left   { bottom: 0; left: 0;   right: auto; top: auto; --ax: 0; --ay: 0; }
+.dgx-anchor--bottom-center { bottom: 0; left: 50%; right: auto; top: auto; --ax: 1; --ay: 0; }
+.dgx-anchor--bottom-right  { bottom: 0; right: 0;  left: auto;  top: auto; --ax: 0; --ay: 0; }
+
+/* ----- Top badge --------------------------------------------------------- */
+.dgx-showcase__badge {
+	--tx: 22px;
+	--ty: 22px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 14px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.95);
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+	box-shadow: 0 4px 16px rgba(14, 26, 38, 0.15);
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #0e1a26;
+	transition: --lift 0.25s ease;
+}
+
+.dgx-showcase__badge:hover {
+	--lift: -2px;
+}
+
+.dgx-showcase__badge-dot {
+	flex-shrink: 0;
+	width: 7px;
+	height: 7px;
+	border-radius: 999px;
+	background: #435970;
+}
+
+/* ----- Stat ribbon ------------------------------------------------------- */
+.dgx-showcase__stat {
+	--tx: 28px;
+	--ty: -110px;
+	--rot: -6deg;
+	z-index: 4;
+	padding: 16px 30px;
+	border-radius: 999px;
+	background: #0e1a26;
+	color: #d4e3f0;
+	box-shadow: 0 20px 48px rgba(14, 26, 38, 0.4);
+	font-family: "Fraunces", Georgia, serif;
+	font-style: italic;
+	font-size: 64px;
+	font-weight: 300;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.dgx-showcase__stat-label {
+	--tx: -8px;
+	--ty: -80px;
+	z-index: 4;
+	max-width: 240px;
+	text-align: right;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #ffffff;
+	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* ----- Featured chip ----------------------------------------------------- */
+.dgx-showcase__chip {
+	--tx: 18px;
+	--ty: -18px;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 18px;
+	border-radius: 999px;
+	background: rgba(14, 26, 38, 0.92);
+	border: 1px solid rgba(255, 255, 255, 0.16);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 12px 28px rgba(14, 26, 38, 0.25);
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	text-decoration: none;
+	cursor: pointer;
+	transition: --lift 0.25s ease;
+}
+
+.dgx-showcase__chip:hover {
+	--lift: -2px;
+}
+
+.dgx-showcase__chip-dot {
+	flex-shrink: 0;
+	width: 7px;
+	height: 7px;
+	border-radius: 999px;
+	background: #dfedfb;
+}
+
+.dgx-showcase__chip-arrow {
+	display: inline-flex;
+	transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.dgx-showcase__chip-arrow svg {
+	width: 13px;
+	height: 13px;
+}
+
+.dgx-showcase__chip:hover .dgx-showcase__chip-arrow {
+	transform: translateX(3px);
+}
+
+/* ----- Stat card --------------------------------------------------------- */
+/* A solid floating card: small mono label, a large serif value, and a muted
+ * sub line — like a metric/progress callout pinned over the photo. */
+.dgx-showcase__card {
+	--tx: -22px;
+	--ty: 22px;
+	z-index: 5;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-width: 280px;
+	padding: 20px 26px;
+	border-radius: 22px;
+	background: #ffffff;
+	box-shadow: 0 18px 44px rgba(14, 26, 38, 0.22);
+	transition: --lift 0.25s ease;
+}
+
+.dgx-showcase__card:hover {
+	--lift: -3px;
+}
+
+.dgx-showcase__card-label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #6b7785;
+}
+
+.dgx-showcase__card-value {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 46px;
+	font-weight: 400;
+	line-height: 1.02;
+	color: #0e1a26;
+}
+
+.dgx-showcase__card-sub {
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 13px;
+	color: #6b7785;
+}
+
+/* ----- Pulsing dots ------------------------------------------------------ */
+@keyframes dgx-showcase-pulse {
+	0%, 100% { transform: scale(1); opacity: 1; }
+	50% { transform: scale(1.5); opacity: 0.55; }
+}
+
+.dgx-showcase__badge-dot,
+.dgx-showcase__chip-dot {
+	animation: dgx-showcase-pulse 2.4s ease-in-out infinite;
+}
+
+/* ----- Responsive -------------------------------------------------------- */
+@media (max-width: 767px) {
+	.dgx-showcase {
+		min-height: 440px;
+	}
+
+	.dgx-showcase__stat {
+		font-size: 44px;
+	}
+
+	.dgx-showcase__card-value {
+		font-size: 36px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dgx-showcase__chip-arrow,
+	.dgx-showcase__badge-dot,
+	.dgx-showcase__chip-dot {
+		animation: none;
+		transition: none;
+	}
+}

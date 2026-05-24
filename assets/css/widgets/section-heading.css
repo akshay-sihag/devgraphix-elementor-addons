@@ -1,0 +1,207 @@
+/* =========================================================================
+ * Devgraphix — Section Heading
+ * Three pieces in one widget, pulled pixel-for-pixel from homepage.html:
+ *   1. Eyebrow row  — counter pill + divider rule + mono label
+ *   2. Headline     — serif title with an italic, tinted accent span
+ *   3. Subheading   — sans description paragraph
+ * Cosmetic defaults are baked here; Elementor controls override them and
+ * carry matching defaults so the Style panel reflects what renders.
+ * ========================================================================= */
+
+.dgx-heading {
+	position: relative;
+	box-sizing: border-box;
+}
+
+.dgx-heading *,
+.dgx-heading *::before,
+.dgx-heading *::after {
+	box-sizing: border-box;
+}
+
+/* Keep the real content above the background watermark layer. */
+.dgx-heading__eyebrow,
+.dgx-heading__title,
+.dgx-heading__sub {
+	position: relative;
+	z-index: 1;
+}
+
+/* ----- 0. Background heading (watermark) ---------------------------------- */
+.dgx-heading__watermark {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 0;
+	margin: 0;
+	pointer-events: none;
+	font-family: "Fraunces", Georgia, serif;
+	font-style: italic;
+	font-weight: 300;
+	font-size: 320px;
+	line-height: 0.8;
+	color: rgba(67, 89, 112, 0.07);
+	transform: rotate(var(--dgx-wm-rot, 0deg));
+	transform-origin: left top;
+}
+
+/* "Place In Front" — lift the watermark above the heading content. Driven by a
+ * render-added class (in this cache-busted stylesheet) so it doesn't depend on
+ * Elementor's per-post CSS being regenerated. */
+.dgx-heading--wm-front .dgx-heading__watermark {
+	z-index: 2;
+}
+
+/* ----- 1. Eyebrow row ----------------------------------------------------- */
+.dgx-heading__eyebrow {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-bottom: 18px;
+}
+
+/* Pill container variant — the whole eyebrow wrapped in one rounded pill. */
+.dgx-heading__eyebrow--pill {
+	display: inline-flex;
+	width: auto;
+	flex-wrap: nowrap;
+	gap: 10px;
+	background: rgba(67, 89, 112, 0.1);
+	padding: 9px 16px;
+	border-radius: 999px;
+}
+
+/* Eyebrow icon. */
+.dgx-heading__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	line-height: 0;
+	font-size: 11px;
+	color: #0e1a26;
+}
+
+.dgx-heading__icon svg {
+	width: 1em;
+	height: 1em;
+	fill: currentColor;
+}
+
+.dgx-heading__icon i {
+	font-size: inherit;
+}
+
+.dgx-heading__count {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #435970;
+	background: rgba(67, 89, 112, 0.1);
+	padding: 5px 11px;
+	border-radius: 999px;
+	white-space: nowrap;
+}
+
+/* A counter inside a pill container shouldn't be a pill-within-a-pill. */
+.dgx-heading__eyebrow--pill .dgx-heading__count {
+	background: none;
+	padding: 0;
+}
+
+/* ----- Divider variants --------------------------------------------------- */
+.dgx-heading__divider {
+	flex-shrink: 0;
+	background: var(--dgx-div-color, rgba(67, 89, 112, 0.35));
+}
+
+.dgx-heading__divider--line {
+	width: 40px;
+	height: 1px;
+}
+
+.dgx-heading__divider--dot {
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+}
+
+.dgx-heading__divider--text {
+	width: auto;
+	height: auto;
+	background: none;
+	color: var(--dgx-div-color, rgba(67, 89, 112, 0.35));
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 16px;
+	line-height: 1;
+}
+
+.dgx-heading__label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+/* ----- 2. Headline -------------------------------------------------------- */
+.dgx-heading__title {
+	margin: 0;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 88px;
+	line-height: 0.92;
+	letter-spacing: -0.025em;
+	font-weight: 400;
+	color: #0e1a26;
+}
+
+.dgx-heading__accent {
+	color: #435970;
+	font-style: italic;
+	font-weight: 300;
+}
+
+/* ----- 3. Subheading ------------------------------------------------------ */
+.dgx-heading__sub {
+	margin: 18px 0 0;
+	max-width: 540px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 17px;
+	line-height: 1.55;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+/* ----- Alignment (prefix_class on the widget wrapper) --------------------- */
+.dgx-halign-center .dgx-heading {
+	text-align: center;
+}
+
+.dgx-halign-center .dgx-heading__eyebrow {
+	justify-content: center;
+}
+
+.dgx-halign-center .dgx-heading__sub {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.dgx-halign-right .dgx-heading {
+	text-align: right;
+}
+
+.dgx-halign-right .dgx-heading__eyebrow {
+	justify-content: flex-end;
+}
+
+.dgx-halign-right .dgx-heading__sub {
+	margin-left: auto;
+}
+
+/* ----- Responsive --------------------------------------------------------- */
+@media (max-width: 767px) {
+	.dgx-heading__title {
+		font-size: 44px;
+	}
+}

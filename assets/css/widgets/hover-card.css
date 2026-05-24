@@ -1,0 +1,307 @@
+/**
+ * Devgraphix Elementor Addons — "Hover Cards" widget structural styles.
+ *
+ * Values mirror the reference design (Alternate Health Club "Process" card):
+ *   - serif  : Fraunces        (heading + number)
+ *   - sans   : Inter Tight      (description)
+ *   - mono   : DM Mono          (footer label)
+ * Layout, positioning, transitions and cosmetic defaults live here. Colors,
+ * sizes, typography and spacing are all overridable from the Style tab.
+ */
+
+/* Easing taken from the source (cubic-bezier(.2,.7,.2,1)). */
+.dgx-hover-card {
+	--dgx-hc-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	min-height: 440px;
+	padding: 40px 32px 32px;
+	border-radius: 24px;
+	background-color: #eaf1f8;
+	/* Border is set from the Style tab (default 1px rgba(14,26,38,.06)). */
+	transition: transform 0.35s var(--dgx-hc-ease), box-shadow 0.35s var(--dgx-hc-ease);
+}
+
+/* Card lifts on hover. */
+.dgx-hover-card:hover {
+	transform: translateY(-4px);
+}
+
+/* Keep real content above the image + scrim layers. The absolutely
+   positioned number is excluded so its own positioning isn't overridden. */
+.dgx-hover-card > *:not(.dgx-hover-card__bg):not(.dgx-hover-card__scrim):not(.dgx-hover-card__link):not(.dgx-hover-card__number) {
+	position: relative;
+	z-index: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Hover image + gradient scrim (revealed on hover)
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card__bg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	opacity: 0;
+	transform: scale(1.08);
+	transition: opacity 0.55s var(--dgx-hc-ease), transform 1.2s var(--dgx-hc-ease);
+	pointer-events: none;
+}
+
+.dgx-hover-card__scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background: linear-gradient(180deg, rgba(14, 26, 38, 0.32) 0%, rgba(14, 26, 38, 0.78) 100%);
+	opacity: 0;
+	transition: opacity 0.55s var(--dgx-hc-ease);
+	pointer-events: none;
+}
+
+.dgx-hover-card:hover .dgx-hover-card__bg {
+	opacity: 1;
+	transform: scale(1);
+}
+
+.dgx-hover-card:hover .dgx-hover-card__scrim {
+	opacity: 1;
+}
+
+/* Optional: disable the slow image zoom. */
+.dgx-hover-card--no-zoom .dgx-hover-card__bg,
+.dgx-hover-card--no-zoom:hover .dgx-hover-card__bg {
+	transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Oversized italic numeral — decorative anchor, top-right
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card__number {
+	position: absolute;
+	top: 28px;
+	right: 32px;
+	z-index: 1;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 80px;
+	font-style: italic;
+	font-weight: 300;
+	line-height: 1;
+	letter-spacing: -0.04em;
+	color: rgba(67, 89, 112, 0.13);
+	pointer-events: none;
+	transition: color 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card:hover .dgx-hover-card__number {
+	color: rgba(255, 255, 255, 0.22);
+}
+
+/* ---------------------------------------------------------------------------
+ * Icon — in the card's accent color
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card__icon {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	margin-top: 32px;
+	margin-bottom: 22px;
+	color: #435970;
+	line-height: 1;
+	transition: color 0.55s var(--dgx-hc-ease), opacity 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card__icon svg {
+	width: 22px;
+	height: 22px;
+	fill: none;
+	stroke: currentColor;
+}
+
+.dgx-hover-card__icon i {
+	font-size: 22px;
+	color: currentColor;
+}
+
+.dgx-hover-card:hover .dgx-hover-card__icon {
+	color: rgba(255, 255, 255, 0.85);
+	opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Title + body
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card__body {
+	display: flex;
+	flex-direction: column;
+}
+
+.dgx-hover-card__heading {
+	margin: 0;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 28px;
+	font-weight: 500;
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	color: #0e1a26;
+	transition: color 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card__desc {
+	margin: 12px 0 0;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	line-height: 1.55;
+	color: rgba(14, 26, 38, 0.62);
+	transition: color 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card:hover .dgx-hover-card__heading {
+	color: #ffffff;
+}
+
+.dgx-hover-card:hover .dgx-hover-card__desc {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+/* ---------------------------------------------------------------------------
+ * Footer — hairline top border + label + arrow button
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card__footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-top: auto;
+	padding-top: 22px;
+	border-top: 1px solid rgba(67, 89, 112, 0.2);
+	transition: border-color 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card:hover .dgx-hover-card__footer {
+	border-top-color: rgba(255, 255, 255, 0.22);
+}
+
+.dgx-hover-card--no-divider .dgx-hover-card__footer {
+	border-top-color: transparent;
+}
+
+.dgx-hover-card__label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.62);
+	transition: color 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card:hover .dgx-hover-card__label {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+.dgx-hover-card__arrow {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	color: #435970;
+	background-color: transparent;
+	border: 1px solid rgba(67, 89, 112, 0.33);
+	border-radius: 999px;
+	transition: background-color 0.35s var(--dgx-hc-ease), color 0.35s var(--dgx-hc-ease), border-color 0.35s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card__arrow svg {
+	width: 12px;
+	height: 12px;
+	fill: none;
+	stroke: currentColor;
+}
+
+.dgx-hover-card__arrow i {
+	font-size: 12px;
+	color: currentColor;
+}
+
+/* The arrow glyph slides right on hover. */
+.dgx-hover-card__arrow i,
+.dgx-hover-card__arrow svg {
+	transition: transform 0.25s ease-out;
+}
+
+.dgx-hover-card:hover .dgx-hover-card__arrow {
+	color: #0e1a26;
+	background-color: #ffffff;
+	border-color: #ffffff;
+}
+
+.dgx-hover-card:hover .dgx-hover-card__arrow i,
+.dgx-hover-card:hover .dgx-hover-card__arrow svg {
+	transform: translateX(6px);
+}
+
+/* Whole-card clickable overlay (output only when a link is set). */
+.dgx-hover-card__link {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+}
+
+/* ---------------------------------------------------------------------------
+ * Layout: Centered
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card--layout-centered {
+	text-align: center;
+}
+
+.dgx-hover-card--layout-centered .dgx-hover-card__icon {
+	align-self: center;
+}
+
+.dgx-hover-card--layout-centered .dgx-hover-card__footer {
+	justify-content: center;
+}
+
+/* ---------------------------------------------------------------------------
+ * Layout: Bottom aligned (icon stays at top, the rest sinks down)
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card--layout-bottom .dgx-hover-card__body {
+	margin-top: auto;
+}
+
+.dgx-hover-card--layout-bottom .dgx-hover-card__footer {
+	margin-top: 24px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Layout: Reveal on hover (description + footer fade/slide in)
+ * ------------------------------------------------------------------------- */
+.dgx-hover-card--layout-reveal .dgx-hover-card__desc,
+.dgx-hover-card--layout-reveal .dgx-hover-card__footer {
+	opacity: 0;
+	transform: translateY(14px);
+	transition: opacity 0.5s var(--dgx-hc-ease), transform 0.5s var(--dgx-hc-ease), color 0.55s var(--dgx-hc-ease);
+}
+
+.dgx-hover-card--layout-reveal:hover .dgx-hover-card__desc,
+.dgx-hover-card--layout-reveal:hover .dgx-hover-card__footer {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Accessible label text for the card link. */
+.dgx-hover-card .screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	white-space: nowrap;
+	border: 0;
+}

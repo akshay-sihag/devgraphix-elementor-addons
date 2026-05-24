@@ -1,0 +1,470 @@
+/**
+ * Devgraphix Elementor Addons — "Featured Box" widget styles.
+ *
+ * A single card with two looks (set via the Type control):
+ *   - product : full-bleed lifestyle image + dark wash + chip/headline/price/
+ *               CTA and a recessed cutout holding a product packshot (pulled
+ *               from a selected post/WooCommerce product or uploaded).
+ *   - content : tonal background + number/label + heading + description +
+ *               optional badge/chips/stats and a positioned image.
+ *
+ * Drop several into your own Elementor columns/containers to build grids.
+ * Values mirror the reference design; fonts use fallback stacks. Colors,
+ * borders, shadow and typography are all set from the Style tab (the controls
+ * carry matching defaults, so the panel reflects the rendered look).
+ */
+
+.dgx-fbox {
+	--dgx-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+	position: relative;
+	overflow: hidden;
+	min-height: 320px;
+	border-radius: 28px;
+	background: #ffffff;
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+	/* Border (Style tab) is drawn as the ::before overlay below; box-shadow
+	   is set from the Style tab (with matching defaults). */
+}
+
+/* The card border is rendered as an on-top overlay rather than a real CSS
+   border, so corner-anchored images/cutouts sit perfectly flush with the
+   card edge — no 1px gap. The border control targets this pseudo-element. */
+.dgx-fbox::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	pointer-events: none;
+	z-index: 4;
+}
+
+/* Content lift (HTML: translateY(-3px), .25s ease). */
+.dgx-fbox:hover {
+	transform: translateY(-3px);
+}
+
+/* Product lift (HTML .ahc-lift: translateY(-4px), .35s cubic-bezier). */
+.dgx-fbox--product {
+	background: #ffffff;
+	border-radius: 32px;
+	transition: transform 0.35s var(--dgx-ease), box-shadow 0.35s var(--dgx-ease);
+}
+
+.dgx-fbox--product:hover {
+	transform: translateY(-4px);
+}
+
+.dgx-fbox--small {
+	border-radius: 24px;
+}
+
+/* Keep content above image + wash layers. Absolutely positioned children
+   (cutout, content image) are excluded so their positioning isn't overridden
+   by this selector's higher specificity. */
+.dgx-fbox > *:not(.dgx-fbox__bg):not(.dgx-fbox__wash):not(.dgx-fbox__link):not(.dgx-fbox__cutout):not(.dgx-fbox__content-img) {
+	position: relative;
+	z-index: 1;
+}
+
+.dgx-fbox__link {
+	position: absolute;
+	inset: 0;
+	z-index: 6;
+}
+
+/* ===========================================================================
+ * Product look
+ * ======================================================================== */
+.dgx-fbox__bg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.dgx-fbox__wash {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+.dgx-fbox--product .dgx-fbox__content {
+	position: relative;
+	z-index: 3;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 22px 24px 18px;
+}
+
+.dgx-fbox__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 2px;
+}
+
+.dgx-fbox__chip {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #ffffff;
+	padding: 4px 10px;
+	background: rgba(255, 255, 255, 0.18);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: 999px;
+}
+
+.dgx-fbox__rule {
+	width: 22px;
+	height: 1px;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.dgx-fbox__cat {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.dgx-fbox__title {
+	margin: 4px 0 0;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 38px;
+	font-weight: 400;
+	line-height: 0.95;
+	letter-spacing: -0.025em;
+	color: #ffffff;
+	text-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+}
+
+.dgx-fbox--product .dgx-fbox__accent {
+	font-style: italic;
+	font-weight: 300;
+	opacity: 0.85;
+}
+
+.dgx-fbox__price {
+	margin-top: 4px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.8);
+	text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dgx-fbox__price-val {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 20px;
+	font-weight: 400;
+	letter-spacing: -0.01em;
+	color: #ffffff;
+}
+
+.dgx-fbox__price-suffix {
+	margin-left: 3px;
+}
+
+.dgx-fbox__cta {
+	align-self: flex-start;
+	margin-top: 8px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	color: #0e1a26;
+	background: #ffffff;
+	padding: 10px 18px;
+	border-radius: 999px;
+	text-decoration: none;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.dgx-fbox__cta svg,
+.dgx-fbox__cta i {
+	width: 11px;
+	height: 11px;
+	font-size: 11px;
+	transition: transform 0.25s ease-out;
+}
+
+.dgx-fbox--product:hover .dgx-fbox__cta svg,
+.dgx-fbox--product:hover .dgx-fbox__cta i {
+	transform: translateX(4px);
+}
+
+/* Small modifier. */
+.dgx-fbox--small .dgx-fbox__content {
+	padding: 18px 20px 14px;
+}
+
+.dgx-fbox--small .dgx-fbox__title {
+	font-size: 24px;
+}
+
+.dgx-fbox--small .dgx-fbox__price {
+	font-size: 13px;
+}
+
+.dgx-fbox--small .dgx-fbox__price-val {
+	font-size: 17px;
+}
+
+/* Cutout panel — recess holding the packshot. */
+.dgx-fbox__cutout {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 22px 22px 18px;
+	/* The cream gradient is supplied by the Cutout Background control (which
+	   also offers a solid colour or a custom gradient); this is just a fallback. */
+	background-color: #ffffff;
+	border-top-left-radius: var(--dgx-cutout-radius, 32px);
+	box-shadow:
+		inset 14px 14px 28px rgba(14, 26, 38, 0.16),
+		inset 4px 4px 10px rgba(14, 26, 38, 0.08),
+		inset 1px 1px 0 rgba(14, 26, 38, 0.05),
+		-2px -2px 0 rgba(255, 255, 255, 0.4);
+}
+
+.dgx-fbox__cutout::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	box-shadow: inset 0 2px 4px rgba(14, 26, 38, 0.06);
+	pointer-events: none;
+}
+
+.dgx-fbox--small .dgx-fbox__cutout {
+	padding: 14px 16px 10px;
+	--dgx-cutout-radius: 24px;
+}
+
+.dgx-fbox__product-img {
+	position: relative;
+	display: block;
+	height: 180px;
+	width: auto;
+	object-fit: contain;
+	filter:
+		drop-shadow(0 22px 30px rgba(14, 26, 38, 0.28))
+		drop-shadow(0 6px 12px rgba(14, 26, 38, 0.14))
+		drop-shadow(0 1px 2px rgba(14, 26, 38, 0.1));
+}
+
+.dgx-fbox--small .dgx-fbox__product-img {
+	height: 130px;
+}
+
+/* ===========================================================================
+ * Content look
+ * ======================================================================== */
+.dgx-fbox--content {
+	background: #dfedfb;
+}
+
+.dgx-fbox--content .dgx-fbox__content {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	padding: 36px 32px;
+}
+
+.dgx-fbox--content .dgx-fbox__head {
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.dgx-fbox--content .dgx-fbox__cat {
+	font-size: 10px;
+	color: #435970;
+}
+
+.dgx-fbox__num {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 14px;
+	font-style: italic;
+	font-weight: 300;
+	color: rgba(14, 26, 38, 0.4);
+}
+
+.dgx-fbox--content .dgx-fbox__title {
+	margin: 0;
+	font-size: 40px;
+	line-height: 0.98;
+	color: #0e1a26;
+	text-shadow: none;
+}
+
+.dgx-fbox--content .dgx-fbox__accent {
+	color: #435970;
+	font-style: italic;
+	font-weight: 300;
+}
+
+.dgx-fbox__desc {
+	margin: 18px 0 0;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 15px;
+	line-height: 1.65;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+.dgx-fbox__badge {
+	align-self: flex-start;
+	margin-top: 22px;
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	background: #ffffff;
+	padding: 9px 15px;
+	border-radius: 999px;
+	border: 1px solid rgba(14, 26, 38, 0.12);
+}
+
+.dgx-fbox__badge-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 999px;
+	background: #435970;
+	color: #ffffff;
+}
+
+.dgx-fbox__badge-icon svg {
+	width: 12px;
+	height: 12px;
+}
+
+.dgx-fbox__badge-icon i {
+	font-size: 12px;
+}
+
+.dgx-fbox__badge-text {
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	color: #0e1a26;
+}
+
+.dgx-fbox__chips {
+	margin-top: 22px;
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.dgx-fbox__chip-item {
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	color: #0e1a26;
+	background: rgba(255, 255, 255, 0.7);
+	padding: 8px 13px;
+	border-radius: 999px;
+	border: 1px solid rgba(14, 26, 38, 0.12);
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+}
+
+.dgx-fbox__stats {
+	margin-top: 20px;
+	padding-top: 18px;
+	border-top: 1px solid rgba(14, 26, 38, 0.12);
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 18px;
+}
+
+.dgx-fbox__stat-val {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 28px;
+	font-style: italic;
+	font-weight: 300;
+	line-height: 1;
+	color: #0e1a26;
+}
+
+.dgx-fbox__stat-label {
+	margin-top: 4px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 11px;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+/* Positioned content image. */
+.dgx-fbox__content-img {
+	position: absolute;
+	z-index: 1;
+	pointer-events: none;
+}
+
+.dgx-fbox__content-img--right-bottom {
+	right: var(--dgx-cimg-right, 0px);
+	bottom: var(--dgx-cimg-bottom, 0px);
+	height: 80%;
+	width: auto;
+	object-fit: contain;
+	object-position: right bottom;
+}
+
+.dgx-fbox__content-img--right-top {
+	right: var(--dgx-cimg-right, 0px);
+	top: var(--dgx-cimg-top, 0px);
+	height: 80%;
+	width: auto;
+	object-fit: contain;
+	object-position: right top;
+}
+
+.dgx-fbox__content-img--right-center {
+	right: var(--dgx-cimg-right, 0px);
+	top: 50%;
+	transform: translateY(-50%);
+	height: 80%;
+	width: auto;
+	object-fit: contain;
+	object-position: right center;
+}
+
+.dgx-fbox__content-img--bottom {
+	left: var(--dgx-cimg-left, 0px);
+	right: var(--dgx-cimg-right, 0px);
+	bottom: var(--dgx-cimg-bottom, 0px);
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+	object-position: center bottom;
+}
+
+.dgx-fbox__content-img--cover {
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+@media (max-width: 767px) {
+	.dgx-fbox--content .dgx-fbox__content {
+		max-width: 100% !important;
+	}
+}

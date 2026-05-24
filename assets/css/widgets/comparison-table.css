@@ -1,0 +1,335 @@
+/* =========================================================================
+ * Devgraphix — Comparison Table
+ * Unlimited side-by-side columns; one can be highlighted into an elevated
+ * card with a ribbon badge. Each cell supports a value, a check/cross icon
+ * and a chip. Per-column background + accent colours. The widget has NO
+ * wrapper background — drop it on your own section/container and add your own
+ * background + padding. Cosmetic defaults are baked here; controls override.
+ * ========================================================================= */
+
+.dgx-cmp {
+	--cmp-rule: rgba(14, 26, 38, 0.12);
+	--cmp-ink: #0e1a26;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	gap: 0;
+	box-sizing: border-box;
+}
+
+.dgx-cmp *,
+.dgx-cmp *::before,
+.dgx-cmp *::after {
+	box-sizing: border-box;
+}
+
+/* ----- Column ------------------------------------------------------------ */
+.dgx-cmp__col {
+	--cmp-accent: #435970;
+	position: relative;
+	flex: 1 1 240px;
+	min-width: 0;
+	padding: 36px 28px 28px;
+	z-index: 1;
+}
+
+/* Highlighted column — elevated card. The cream gradient is the default look;
+ * a per-column Background control paints over the overlay layer below, so a
+ * solid colour or a custom gradient both fully replace it. */
+.dgx-cmp__col--highlight {
+	z-index: 2;
+	padding: 36px 36px 28px;
+	border-radius: 28px;
+	border: 1px solid var(--cmp-rule);
+	background: linear-gradient(180deg, #ffffff 0%, #fbf9f4 100%);
+	box-shadow: 0 28px 60px rgba(14, 26, 38, 0.1), 0 6px 14px rgba(14, 26, 38, 0.05);
+}
+
+/* Per-column background overlay. Sits above the column's own background but
+ * below the content, so the per-column Background control (solid OR gradient)
+ * cleanly overrides the baked-in default. Transparent by default. */
+.dgx-cmp__bg {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	border-radius: inherit;
+	pointer-events: none;
+}
+
+/* Keep content above the overlay. */
+.dgx-cmp__head,
+.dgx-cmp__rows {
+	position: relative;
+	z-index: 1;
+}
+
+/* ----- Ribbon ------------------------------------------------------------ */
+.dgx-cmp__ribbon {
+	position: absolute;
+	top: -16px;
+	left: 36px;
+	z-index: 3;
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 8px 16px;
+	border-radius: 999px;
+	background: var(--cmp-ink);
+	color: #ffffff;
+	box-shadow: 0 8px 18px rgba(14, 26, 38, 0.22);
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.dgx-cmp__ribbon-icon {
+	display: inline-flex;
+	color: #f6c453;
+}
+
+.dgx-cmp__ribbon-icon svg {
+	width: 11px;
+	height: 11px;
+	fill: currentColor;
+}
+
+/* ----- Header ------------------------------------------------------------ */
+.dgx-cmp__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid var(--cmp-rule);
+}
+
+.dgx-cmp__brand {
+	min-width: 0;
+}
+
+.dgx-cmp__logo {
+	display: block;
+	height: 56px;
+	width: auto;
+	object-fit: contain;
+}
+
+.dgx-cmp__name {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 34px;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: -0.02em;
+	color: rgba(14, 26, 38, 0.55);
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__name {
+	color: var(--cmp-ink);
+}
+
+.dgx-cmp__subtitle {
+	margin-top: 6px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.45);
+}
+
+.dgx-cmp__price {
+	text-align: right;
+	flex-shrink: 0;
+}
+
+.dgx-cmp__price-label {
+	display: block;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.4);
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__price-label {
+	color: var(--cmp-accent);
+}
+
+.dgx-cmp__price-val {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 28px;
+	font-weight: 400;
+	font-style: italic;
+	line-height: 1;
+	letter-spacing: -0.02em;
+	color: rgba(14, 26, 38, 0.55);
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__price-val {
+	font-size: 32px;
+	color: var(--cmp-ink);
+}
+
+.dgx-cmp__price-suffix {
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	color: rgba(14, 26, 38, 0.55);
+	margin-left: 2px;
+}
+
+.dgx-cmp__price--strike .dgx-cmp__price-val {
+	text-decoration: line-through;
+	text-decoration-thickness: 1px;
+	text-decoration-color: rgba(14, 26, 38, 0.3);
+}
+
+/* ----- Rows -------------------------------------------------------------- */
+.dgx-cmp__rows {
+	display: flex;
+	flex-direction: column;
+}
+
+.dgx-cmp__row {
+	padding: 20px 0;
+}
+
+.dgx-cmp__row:not(:last-child) {
+	border-bottom: 1px solid var(--cmp-rule);
+}
+
+.dgx-cmp__row-label {
+	margin-bottom: 8px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.35);
+}
+
+/* Label-only row: no value box below it, so drop the gap it reserved. */
+.dgx-cmp__row-label:last-child {
+	margin-bottom: 0;
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__row-label {
+	color: rgba(14, 26, 38, 0.5);
+}
+
+.dgx-cmp__row-value {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+	min-height: 36px;
+}
+
+/* Value text */
+.dgx-cmp__val {
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 1.1;
+	color: rgba(14, 26, 38, 0.55);
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__val {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 28px;
+	font-weight: 400;
+	letter-spacing: -0.015em;
+	color: var(--cmp-ink);
+}
+
+/* Icon + label rows render the value slightly smaller. */
+.dgx-cmp__row--icon .dgx-cmp__val {
+	font-size: 15px;
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__row--icon .dgx-cmp__val {
+	font-size: 22px;
+	font-style: italic;
+	font-weight: 300;
+}
+
+/* Row icons (check / cross / named). Colours are driven by CSS variables so
+ * the Style panel can recolour each group; values below are the fallbacks. */
+.dgx-cmp__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 28px;
+	height: 28px;
+	border-radius: 999px;
+	background: var(--cmp-ico-bg, rgba(14, 26, 38, 0.06));
+}
+
+.dgx-cmp__icon svg {
+	width: 14px;
+	height: 14px;
+}
+
+.dgx-cmp__icon--check {
+	color: var(--cmp-ico-pos, rgba(14, 26, 38, 0.5));
+}
+
+.dgx-cmp__icon--cross {
+	border: 1px solid var(--cmp-rule);
+	color: var(--cmp-ico-neg, rgba(14, 26, 38, 0.4));
+}
+
+.dgx-cmp__icon--other {
+	color: var(--cmp-ico-other, var(--cmp-accent));
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__icon {
+	width: 32px;
+	height: 32px;
+	background: var(--cmp-ico-hl-bg, var(--cmp-ink));
+	border: 0;
+	color: var(--cmp-ico-hl-color, #ffffff);
+}
+
+.dgx-cmp__col--highlight .dgx-cmp__icon svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* Chip */
+.dgx-cmp__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--cmp-accent);
+	background: color-mix(in srgb, var(--cmp-accent) 9%, transparent);
+	border: 1px solid color-mix(in srgb, var(--cmp-accent) 22%, transparent);
+}
+
+.dgx-cmp--arrow .dgx-cmp__chip::before {
+	content: "\2191"; /* ↑ */
+	font-size: 10px;
+	line-height: 1;
+}
+
+/* ----- Responsive -------------------------------------------------------- */
+@media (max-width: 880px) {
+	.dgx-cmp {
+		flex-direction: column;
+	}
+
+	.dgx-cmp__col {
+		flex: 1 1 auto;
+	}
+
+	.dgx-cmp__col--highlight {
+		margin-bottom: 8px;
+	}
+}

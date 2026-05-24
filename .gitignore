@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Design source (not part of the distributed plugin)
+homepage.html
+
+# Editor / IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log

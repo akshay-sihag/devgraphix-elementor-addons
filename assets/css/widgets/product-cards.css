@@ -1,0 +1,538 @@
+/* =========================================================================
+ * Devgraphix — Product Cards
+ * Two pixel-perfect card looks (vertical glass / horizontal light) pulled
+ * from homepage.html. Grid or carousel. The widget renders cards only — it
+ * has NO wrapper background; place it on whatever section background you like
+ * (the Vertical glass look is designed to sit on a dark background).
+ * ========================================================================= */
+
+.dgx-pcards {
+	--dgx-ease: cubic-bezier(.2, .7, .2, 1);
+	--dgx-pc-gap: 20px;
+	--dgx-pc-accent: #a6c3e4;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.dgx-pcards *,
+.dgx-pcards *::before,
+.dgx-pcards *::after {
+	box-sizing: border-box;
+}
+
+/* =========================================================================
+ * GRID
+ * ========================================================================= */
+.dgx-pcards--grid .dgx-pcards__track {
+	display: grid;
+	grid-template-columns: repeat(var(--dgx-pc-cols, 2), minmax(0, 1fr));
+	gap: var(--dgx-pc-gap, 20px);
+	align-items: stretch;
+}
+
+/* =========================================================================
+ * CAROUSEL (native scroll-snap; JS drives arrows / dots / autoplay)
+ * ========================================================================= */
+.dgx-pcards--carousel .dgx-pcards__viewport {
+	overflow-x: auto;
+	overflow-y: hidden;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	-webkit-overflow-scrolling: touch;
+}
+
+.dgx-pcards--carousel .dgx-pcards__viewport::-webkit-scrollbar {
+	display: none;
+}
+
+.dgx-pcards--carousel .dgx-pcards__track {
+	display: flex;
+	gap: var(--dgx-pc-gap, 20px);
+	align-items: stretch;
+}
+
+.dgx-pcards--carousel .dgx-pcard {
+	flex: 0 0 calc((100% - (var(--dgx-pc-per, 2) - 1) * var(--dgx-pc-gap, 20px)) / var(--dgx-pc-per, 2));
+	scroll-snap-align: start;
+}
+
+/* Carousel nav */
+.dgx-pcards__nav {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 18px;
+	margin-top: 26px;
+}
+
+.dgx-pcards__arrow {
+	width: 44px;
+	height: 44px;
+	border-radius: 999px;
+	border: 1px solid rgba(14, 26, 38, .14);
+	background: #fff;
+	color: #0e1a26;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	padding: 0;
+	transition: transform .25s var(--dgx-ease), background .25s var(--dgx-ease), opacity .25s var(--dgx-ease);
+}
+
+.dgx-pcards__arrow:hover {
+	transform: scale(1.06);
+}
+
+.dgx-pcards__arrow:disabled {
+	opacity: .35;
+	cursor: default;
+}
+
+.dgx-pcards__arrow svg {
+	width: 18px;
+	height: 18px;
+}
+
+.dgx-pcards--vertical .dgx-pcards__arrow {
+	background: rgba(255, 255, 255, .1);
+	border-color: rgba(255, 255, 255, .2);
+	color: #fff;
+}
+
+.dgx-pcards__dots {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.dgx-pcards__dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 999px;
+	border: 0;
+	padding: 0;
+	background: rgba(14, 26, 38, .2);
+	cursor: pointer;
+	transition: width .25s var(--dgx-ease), background .25s var(--dgx-ease);
+}
+
+.dgx-pcards__dot.is-active {
+	width: 22px;
+	background: #435970;
+}
+
+.dgx-pcards--vertical .dgx-pcards__dot {
+	background: rgba(255, 255, 255, .25);
+}
+
+.dgx-pcards--vertical .dgx-pcards__dot.is-active {
+	background: #a6c3e4;
+}
+
+/* Editor empty-state hint */
+.dgx-pcards__hint {
+	margin: 0;
+	padding: 28px;
+	border: 1px dashed rgba(14, 26, 38, .25);
+	border-radius: 16px;
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 13px;
+	color: rgba(14, 26, 38, .6);
+	text-align: center;
+}
+
+/* =========================================================================
+ * CARD — shared
+ * ========================================================================= */
+.dgx-pcard {
+	position: relative;
+	overflow: hidden;
+	text-decoration: none;
+	transition: transform .35s var(--dgx-ease), box-shadow .35s var(--dgx-ease);
+}
+
+/* =========================================================================
+ * CARD — VERTICAL (glass)
+ * ========================================================================= */
+.dgx-pcards--vertical .dgx-pcard {
+	display: flex;
+	flex-direction: column;
+	min-height: 540px;
+	padding: 24px 22px 22px;
+	border-radius: 24px;
+	border: 1px solid rgba(255, 255, 255, .14);
+	background: linear-gradient(135deg, #0f1530 0%, #2b3b75 100%);
+	color: #fff;
+}
+
+.dgx-pcards--vertical .dgx-pcard:hover {
+	transform: translateY(-4px);
+}
+
+.dgx-pcard__head {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.dgx-pcard__rx {
+	font-family: 'DM Mono', ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #0f1530;
+	background: #fff;
+	padding: 4px 9px;
+	border-radius: 999px;
+}
+
+.dgx-pcard__count {
+	font-family: 'DM Mono', ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, .65);
+}
+
+.dgx-pcards--vertical .dgx-pcard__media {
+	position: relative;
+	z-index: 1;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 8px 0;
+}
+
+.dgx-pcard__halo {
+	position: absolute;
+	top: 30%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 260px;
+	height: 260px;
+	border-radius: 50%;
+	background: radial-gradient(circle, color-mix(in srgb, var(--dgx-pc-accent) 33%, transparent) 0%, transparent 65%);
+	pointer-events: none;
+	z-index: 0;
+}
+
+.dgx-pcards--vertical .dgx-pcard__img {
+	position: relative;
+	z-index: 1;
+	height: 300px;
+	width: auto;
+	max-width: 100%;
+	object-fit: contain;
+	filter: drop-shadow(0 24px 32px rgba(0, 0, 0, .45)) drop-shadow(0 4px 10px rgba(0, 0, 0, .3));
+	transition: transform .5s var(--dgx-ease);
+}
+
+.dgx-pcards--vertical .dgx-pcard:hover .dgx-pcard__img {
+	transform: scale(1.04);
+}
+
+.dgx-pcard__foot {
+	position: relative;
+	z-index: 1;
+}
+
+.dgx-pcard__family {
+	font-family: 'DM Mono', ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	color: var(--dgx-pc-accent);
+	margin-bottom: 4px;
+}
+
+.dgx-pcards--vertical .dgx-pcard__name {
+	font-family: 'Fraunces', Georgia, serif;
+	font-size: 26px;
+	font-weight: 400;
+	line-height: 1.05;
+	letter-spacing: -.015em;
+	color: #fff;
+	margin: 0;
+}
+
+.dgx-pcard__sub {
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 11px;
+	line-height: 1.4;
+	color: rgba(255, 255, 255, .6);
+	margin: 6px 0 0;
+}
+
+.dgx-pcards--vertical .dgx-pcard__price-row {
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1px solid rgba(255, 255, 255, .12);
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.dgx-pcards--vertical .dgx-pcard__from {
+	font-family: 'DM Mono', ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, .5);
+}
+
+.dgx-pcards--vertical .dgx-pcard__price {
+	font-family: 'Fraunces', Georgia, serif;
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: -.01em;
+	color: #fff;
+}
+
+.dgx-pcards--vertical .dgx-pcard__price-suffix {
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 11px;
+	font-weight: 500;
+	color: rgba(255, 255, 255, .6);
+	margin-left: 3px;
+}
+
+.dgx-pcard__arrow {
+	flex-shrink: 0;
+	color: var(--dgx-pc-accent);
+	display: inline-flex;
+	transition: transform .35s var(--dgx-ease);
+}
+
+.dgx-pcards--vertical .dgx-pcard__arrow svg {
+	width: 14px;
+	height: 14px;
+}
+
+.dgx-pcards--vertical .dgx-pcard:hover .dgx-pcard__arrow {
+	transform: translateX(4px);
+}
+
+/* =========================================================================
+ * CARD — HORIZONTAL (light)
+ * ========================================================================= */
+.dgx-pcards--horizontal .dgx-pcard {
+	display: grid;
+	grid-template-columns: 180px 1fr;
+	gap: 20px;
+	align-items: center;
+	padding: 26px;
+	border-radius: 28px;
+	border: 1px solid rgba(14, 26, 38, .12);
+	background: rgba(255, 255, 255, .9);
+	color: #0e1a26;
+}
+
+.dgx-pcards--horizontal .dgx-pcard:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 18px 40px rgba(14, 26, 38, .16);
+}
+
+.dgx-pcards--horizontal .dgx-pcard__media {
+	position: relative;
+	height: 198px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.dgx-pcards--horizontal .dgx-pcard__img {
+	height: 100%;
+	width: auto;
+	max-width: 100%;
+	object-fit: contain;
+	filter: drop-shadow(0 18px 28px rgba(14, 26, 38, .22));
+}
+
+.dgx-pcard__body {
+	min-width: 0;
+}
+
+.dgx-pcards--horizontal .dgx-pcard__name {
+	font-family: 'Fraunces', Georgia, serif;
+	font-size: 32px;
+	font-weight: 400;
+	line-height: 1.05;
+	letter-spacing: -.01em;
+	color: #0e1a26;
+	margin: 0;
+}
+
+.dgx-pcard__desc {
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 13px;
+	color: rgba(14, 26, 38, .6);
+	margin: 6px 0 0;
+}
+
+.dgx-pcard__bullets {
+	margin-top: 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.dgx-pcard__bullet {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 12px;
+	color: #0e1a26;
+}
+
+.dgx-pcard__bullet-icon {
+	display: inline-flex;
+	flex-shrink: 0;
+	color: #435970;
+}
+
+.dgx-pcard__bullet-icon svg {
+	width: 12px;
+	height: 12px;
+}
+
+.dgx-pcards--horizontal .dgx-pcard__price-row {
+	margin-top: 18px;
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.dgx-pcards--horizontal .dgx-pcard__from {
+	font-family: 'DM Mono', ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, .6);
+}
+
+.dgx-pcards--horizontal .dgx-pcard__price {
+	font-family: 'Fraunces', Georgia, serif;
+	font-size: 30px;
+	font-weight: 400;
+	line-height: 1;
+	color: #0e1a26;
+}
+
+.dgx-pcards--horizontal .dgx-pcard__price-suffix {
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	margin-left: 3px;
+	color: rgba(14, 26, 38, .6);
+}
+
+.dgx-pcard__btn {
+	font-family: 'Inter Tight', system-ui, sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	background: #0e1a26;
+	color: #fff;
+	border: 0;
+	padding: 11px 18px;
+	border-radius: 999px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+	text-decoration: none;
+	white-space: nowrap;
+	box-shadow: 0 6px 16px rgba(14, 26, 38, .22);
+	transition: transform .25s var(--dgx-ease), box-shadow .25s var(--dgx-ease);
+}
+
+.dgx-pcard__btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 10px 22px rgba(14, 26, 38, .28);
+}
+
+.dgx-pcard__btn-arrow {
+	display: inline-flex;
+	transition: transform .35s var(--dgx-ease);
+}
+
+.dgx-pcard__btn-arrow svg {
+	width: 12px;
+	height: 12px;
+}
+
+.dgx-pcard__btn:hover .dgx-pcard__btn-arrow {
+	transform: translateX(3px);
+}
+
+/* Image placeholder (missing image / demo without an image) */
+.dgx-pcard__img-ph {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 16px;
+	border: 1px dashed currentColor;
+	opacity: .35;
+	font-family: 'DM Mono', ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: .14em;
+	text-transform: uppercase;
+}
+
+.dgx-pcards--vertical .dgx-pcard__img-ph {
+	width: 150px;
+	height: 300px;
+}
+
+.dgx-pcards--horizontal .dgx-pcard__img-ph {
+	width: 100%;
+	height: 100%;
+}
+
+/* Full-card link overlay (vertical) */
+.dgx-pcard__link {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	text-indent: -9999px;
+	overflow: hidden;
+}
+
+/* =========================================================================
+ * RESPONSIVE
+ * ========================================================================= */
+@media (max-width: 767px) {
+	.dgx-pcards--horizontal .dgx-pcard {
+		grid-template-columns: 1fr;
+		text-align: left;
+	}
+
+	.dgx-pcards--horizontal .dgx-pcard__media {
+		height: 160px;
+		justify-content: flex-start;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dgx-pcard,
+	.dgx-pcard__img,
+	.dgx-pcard__arrow,
+	.dgx-pcard__btn,
+	.dgx-pcard__btn-arrow {
+		transition: none;
+	}
+}
