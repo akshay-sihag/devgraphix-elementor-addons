@@ -3,7 +3,7 @@
  * Image Showcase widget.
  *
  * A full-bleed photo card with freely-positionable overlay layers (inspired by
- * homepage.html's Weight Loss centerpiece photo):
+ * the reference design in homepage.html):
  *   - a top trust badge (pulsing dot + mono label),
  *   - a serif stat ribbon with a mono caption,
  *   - a "featured" chip (dot + label + arrow, optionally linked).

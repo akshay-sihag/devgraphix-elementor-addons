@@ -4,7 +4,7 @@ Tags: elementor, addons, widgets, page builder
 Requires at least: 5.9
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.8.2
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,12 +54,37 @@ Included widgets:
   into an elevated card with a ribbon badge. Each cell supports a value, a
   check/cross icon and a chip, with per-column background + accent colours.
   No wrapper background — drop it on your own section and add your own padding.
-* Testimonials — a mixed-media testimonial carousel. Each slide is one of four
-  card types: Text only (quote + stars + category), Video (poster/placeholder
-  + play button + duration, optional video link), Before & After (two photos
-  with labels + a metric chip) or Single Photo (one photo + metric chip).
-  Arrows, dots, autoplay, loop and pause-on-hover; responsive cards-per-view.
-  No wrapper background.
+* Advanced Testimonials — a mixed-media testimonial carousel. Each slide is one
+  of four card types: Text only (quote + stars + category), Video (YouTube,
+  Vimeo or direct file — plays inline, thumbnail fetched automatically),
+  Before & After (two photos with labels + a metric chip) or Single Photo (one
+  photo + metric chip). Choose a card layout (media on top, media on bottom, or
+  text-over-media overlay), set the metric chip's position, and give each card
+  its own footer tag. Arrows, dots, autoplay, loop and pause-on-hover;
+  responsive cards-per-view. No wrapper background.
+* BMI Calculator — an interactive two-card Body-Mass-Index calculator (an Inputs
+  card beside a Result card; drop it into your own section/background). Visitors
+  drag the height and weight sliders (with an Imperial/Metric toggle) and the BMI
+  number, category pill, scale marker, band colours and recommendation text
+  update live. Every visible string is editable (card label, unit toggle labels,
+  height/weight labels, disclaimer, result label, scale tick numbers and band
+  labels, the four category names + recommendations, button text/link/icon), the
+  slider ranges are configurable, and the two cards stack to one column
+  responsively on tablet and mobile.
+* Savings Calculator — an interactive cost-comparison calculator. Visitors drag
+  a "what are you paying now?" slider and the yearly-savings headline, the
+  struck-through current-cost figure and the savings breakdown update live.
+  Every visible string is editable (eyebrow, headline parts, slider label,
+  comparison-strip labels, breakdown heading + an unlimited rows repeater where
+  any row can show the live monthly savings, button, footnote), the currency
+  symbol, your price and the slider range/step/default are configurable, and the
+  layout stacks to a single column on tablet/mobile.
+* Marquee Text — a large, continuously-scrolling text marquee (the big rotating
+  footer headline). Enter one phrase and it loops seamlessly forever with an
+  optional separator (dot or character) between repeats. Choose direction,
+  speed, spacing and pause-on-hover; fill the text with a solid colour or a
+  gradient; and softly fade the left/right edges (adjustable width). Fully
+  responsive — the type scales down per device.
 
 == Requirements ==
 
@@ -76,6 +101,122 @@ Included widgets:
    category.
 
 == Changelog ==
+
+= 1.12.0 =
+* New widget: Marquee Text — a large, continuously-scrolling text marquee (the
+  big rotating footer headline from the design). One editable phrase loops
+  seamlessly forever (repeated + mirrored for a gap-free, never-resetting loop
+  at a constant pixel speed), with an optional dot/character separator.
+* Options: direction, speed, spacing, pause-on-hover; a solid-colour OR gradient
+  text fill (with angle); and a soft edge fade with adjustable width. Responsive
+  typography scales the text down on tablet/mobile.
+
+= 1.11.3 =
+* Removed all brand/medical references ("AHC", "GLP-1", and mockup section
+  names) from the plugin — they only appeared in code comments and one editor
+  search keyword; no visitor-facing output was affected. The widgets remain
+  fully generic and multipurpose.
+
+= 1.11.2 =
+* Savings Calculator: default demo numbers aligned to a clear worked example
+  (price $129/mo, slider default $499/mo, range $150–$1,200) so the yearly
+  figures ($1,548 vs $5,988 = save $4,440) and the −$370/mo breakdown line are
+  immediately legible. All numbers, the currency symbol and every label remain
+  editable — the calculation works for any values you enter (your monthly price
+  ×12 vs the customer's selected monthly cost ×12).
+
+= 1.11.1 =
+* BMI Calculator: scoped down to just the two interactive cards (Inputs +
+  Result). Removed the outer sand-gradient wrapper, the header (eyebrow,
+  "Calculate your BMI" headline, intro), the stat card and the "BMI" watermark,
+  so the widget drops cleanly into your own section/background.
+* BMI Calculator: added the UNDER / NORMAL / OVER / OBESE band-label row beneath
+  the scale (editable), and corrected the slider min/max label colour to match
+  the design.
+
+= 1.11.0 =
+* New widget: Savings Calculator — an interactive cost-comparison calculator
+  built from the homepage design. Drag the "what are you paying now?" slider and
+  the yearly-savings headline, the struck-through current-cost figure and the
+  breakdown rows all update live in the browser.
+* Every text field is editable in Elementor (eyebrow + icon, the three headline
+  parts, slider label, currency symbol, per-month/per-year suffixes, comparison
+  strip labels and "vs" text, breakdown heading, an unlimited breakdown rows
+  repeater, zero-savings text, button text/link/icon, and the footnote).
+* Configurable price, slider min/max/step/default; any breakdown row can be set
+  to display the live monthly savings. Fully responsive — fluid headline and a
+  layout that stacks to one column on tablet/mobile.
+
+= 1.10.0 =
+* New widget: BMI Calculator — an interactive Body-Mass-Index calculator built
+  from the homepage design. Drag the height/weight sliders (Imperial or Metric)
+  and the BMI number, category pill, scale marker, band colours and
+  recommendation text all update live in the browser.
+* Every text field is editable in Elementor (eyebrow, headline + italic accent,
+  intro, stat card, measurement/slider labels, unit toggle labels, disclaimer,
+  result label, scale ticks, the four BMI category names + their recommendation
+  texts, recommendation label, and the button text/link/icon).
+* Configurable slider ranges and defaults, optional unit toggle, stat card,
+  scale bar, watermark and button. Fully responsive — fluid display type and a
+  layout that stacks to a single column on tablet/mobile.
+
+= 1.9.3 =
+* Advanced Testimonials: the carousel now shows exactly the chosen number of
+  cards per view — the next card no longer peeks in at the edge after the
+  carousel scrolls. Card snapping respects the shadow breathing-room padding.
+
+= 1.9.2 =
+* Advanced Testimonials: added an Image Height control (Photo / Before & After
+  section) so you can set the height of the before/after and single-photo
+  images. Leave it empty to keep the natural photo proportions.
+
+= 1.9.1 =
+* Advanced Testimonials: the footer tag is now purely per-card — the global
+  "Default Footer Tag" was removed, and each testimonial has its own Footer Tag
+  field (leave empty to hide it on that card).
+* Advanced Testimonials: roomier, cleaner footer — larger avatar, name and
+  location, plus a new Footer Spacing control to dial it compact or spacious.
+
+= 1.9.0 =
+* Renamed the "Testimonials" widget to "Advanced Testimonials".
+* Video cards now support YouTube and Vimeo links (and direct .mp4/.webm
+  files). The video plays inline on click, and the thumbnail is pulled
+  automatically from YouTube/Vimeo (upload one to override).
+* Added a Card Layout option: media on top, media on bottom, or a text-over-
+  media overlay.
+* The footer tag is now set per testimonial card (with a widget-wide default
+  for any card that doesn't set its own).
+* The metric chip position is now adjustable (corner + X/Y offset).
+* Roomier card footer spacing.
+
+= 1.8.8 =
+* Featured Box: the product packshot is now correctly sized the moment you add
+  an image — it no longer overflows the card on themes that force
+  `img { height: auto }`. (You can still fine-tune it with Packshot Height.)
+
+= 1.8.7 =
+* Testimonials: card shadows are no longer clipped by the carousel's scroll
+  area — the track now has breathing room so the soft shadow renders in full
+  on every side. Dots/arrows stay aligned with the card edges.
+
+= 1.8.6 =
+* Testimonials (Before & After): the metric chip now sits above the Before /
+  After label bars instead of overlapping them. The label bars also get a
+  consistent height so the chip always clears them.
+
+= 1.8.5 =
+* Testimonials: added a responsive Dot Size control (Arrows & Dots section).
+  The active dot's pill width scales with it automatically.
+
+= 1.8.4 =
+* Testimonials: fixed oversized navigation dots on themes that apply a global
+  min-width / min-height to buttons — the dots are now reset and locked to the
+  intended small size (active dot is a short pill), regardless of theme styles.
+
+= 1.8.3 =
+* Featured Box (Content look): the stats row now always sticks to the bottom of
+  the card, regardless of how much (or how little) content is above it — the
+  content column fills the full card height and the stats pin to the bottom.
 
 = 1.8.2 =
 * Comparison Table: rows are now added one at a time in a proper repeater (like

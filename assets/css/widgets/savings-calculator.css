@@ -1,0 +1,449 @@
+/* =========================================================================
+ * Devgraphix — Savings Calculator
+ * Interactive cost-comparison calculator, pixel-for-pixel from homepage.html
+ * (the savings-calculator card, lines ~2631-2818). A dark card with a
+ * "what are you paying now?" range slider drives the live yearly-savings
+ * headline, the our-cost-vs-current strip and the breakdown rows. Cosmetic
+ * defaults are baked here; Elementor controls override them and carry matching
+ * defaults. One accent (`--dgx-sav-accent`) tints the eyebrow, headline amount,
+ * slider fill/thumb, strip + breakdown values and check marks. Fonts use
+ * graceful fallback stacks only (set real fonts via Elementor).
+ * ========================================================================= */
+
+.dgx-sav {
+	--dgx-sav-accent: #bcd3e8;
+	--dgx-sav-track: rgba(255, 255, 255, 0.12);
+	box-sizing: border-box;
+}
+
+.dgx-sav *,
+.dgx-sav *::before,
+.dgx-sav *::after {
+	box-sizing: border-box;
+}
+
+/* ----- Card --------------------------------------------------------------- */
+.dgx-sav__card {
+	position: relative;
+	overflow: hidden;
+	padding: 44px 48px;
+	border-radius: 28px;
+	background: #0e1a26;
+	color: #ffffff;
+	box-shadow: 0 24px 50px rgba(14, 26, 38, 0.22);
+}
+
+/* ----- Accent glows ------------------------------------------------------- */
+.dgx-sav__glow {
+	position: absolute;
+	border-radius: 50%;
+	pointer-events: none;
+}
+
+.dgx-sav__glow--a {
+	top: -120px;
+	right: -80px;
+	width: 360px;
+	height: 360px;
+	background: radial-gradient(circle, color-mix(in srgb, var(--dgx-sav-accent) 25%, transparent) 0%, transparent 65%);
+}
+
+.dgx-sav__glow--b {
+	bottom: -160px;
+	left: -60px;
+	width: 320px;
+	height: 320px;
+	background: radial-gradient(circle, color-mix(in srgb, var(--dgx-sav-accent) 12%, transparent) 0%, transparent 65%);
+}
+
+/* ----- Grid --------------------------------------------------------------- */
+.dgx-sav__grid {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: 1.2fr 1fr;
+	gap: 48px;
+	align-items: center;
+}
+
+.dgx-sav__main {
+	min-width: 0;
+}
+
+/* ----- Eyebrow ------------------------------------------------------------ */
+.dgx-sav__eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 18px;
+	padding: 5px 12px;
+	border-radius: 999px;
+	color: var(--dgx-sav-accent);
+	background: color-mix(in srgb, var(--dgx-sav-accent) 12%, transparent);
+	border: 1px solid color-mix(in srgb, var(--dgx-sav-accent) 33%, transparent);
+}
+
+.dgx-sav__eyebrow-icon {
+	font-size: 11px;
+	line-height: 1;
+}
+
+.dgx-sav__eyebrow-text {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+/* ----- Headline ----------------------------------------------------------- */
+.dgx-sav__headline {
+	margin: 0;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 60px;
+	font-weight: 300;
+	line-height: 0.98;
+	letter-spacing: -0.03em;
+	color: #ffffff;
+}
+
+.dgx-sav__amount {
+	font-style: italic;
+	font-weight: 300;
+	color: var(--dgx-sav-accent);
+}
+
+.dgx-sav__h-suffix {
+	margin-left: 8px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.dgx-sav__h-line2 {
+	color: rgba(255, 255, 255, 0.78);
+}
+
+/* ----- Slider ------------------------------------------------------------- */
+.dgx-sav__slider {
+	margin-top: 28px;
+}
+
+.dgx-sav__slider-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.dgx-sav__slider-label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.65);
+}
+
+.dgx-sav__slider-value {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 22px;
+	font-style: italic;
+	font-weight: 400;
+	line-height: 1;
+	color: #ffffff;
+	white-space: nowrap;
+}
+
+.dgx-sav__per {
+	margin-left: 2px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.6);
+}
+
+.dgx-sav__range {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 6px;
+	border-radius: 999px;
+	outline: none;
+	cursor: pointer;
+	background: var(--dgx-sav-track);
+}
+
+.dgx-sav__range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	background: #fff;
+	border: 3px solid var(--dgx-sav-accent);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 0 0 6px rgba(255, 255, 255, 0.04);
+	cursor: grab;
+	transition: transform 0.12s;
+}
+
+.dgx-sav__range::-webkit-slider-thumb:active {
+	cursor: grabbing;
+	transform: scale(1.08);
+}
+
+.dgx-sav__range::-moz-range-thumb {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	background: #fff;
+	border: 3px solid var(--dgx-sav-accent);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+	cursor: grab;
+}
+
+.dgx-sav__minmax {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 8px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+/* ----- Comparison strip --------------------------------------------------- */
+.dgx-sav__strip {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-top: 20px;
+	padding: 14px 18px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.dgx-sav__strip-col {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.dgx-sav__strip-label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.dgx-sav__strip-label--ours {
+	color: var(--dgx-sav-accent);
+}
+
+.dgx-sav__strip-label--muted {
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.dgx-sav__strip-val {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 24px;
+	font-style: italic;
+	font-weight: 300;
+	line-height: 1;
+	color: #ffffff;
+	white-space: nowrap;
+}
+
+.dgx-sav__strip-val--current {
+	font-size: 22px;
+	color: rgba(255, 255, 255, 0.5);
+	text-decoration: line-through;
+	text-decoration-thickness: 1.5px;
+	text-decoration-color: color-mix(in srgb, var(--dgx-sav-accent) 67%, transparent);
+}
+
+.dgx-sav__per2 {
+	margin-left: 3px;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.65);
+}
+
+.dgx-sav__strip-val--current .dgx-sav__per2 {
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.dgx-sav__vs {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 22px;
+	font-style: italic;
+	font-weight: 300;
+	color: rgba(255, 255, 255, 0.4);
+}
+
+/* ----- Breakdown ---------------------------------------------------------- */
+.dgx-sav__breakdown {
+	padding: 24px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.05);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+}
+
+.dgx-sav__breakdown-head {
+	margin-bottom: 16px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.55);
+}
+
+.dgx-sav__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dgx-sav__rows .dgx-sav__row:last-child {
+	border-bottom: 0;
+}
+
+.dgx-sav__row-main {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.dgx-sav__row-check {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: 18px;
+	height: 18px;
+	border-radius: 999px;
+	color: var(--dgx-sav-accent);
+	background: color-mix(in srgb, var(--dgx-sav-accent) 15%, transparent);
+}
+
+.dgx-sav__row-check svg {
+	width: 11px;
+	height: 11px;
+}
+
+.dgx-sav__row-label {
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.88);
+}
+
+.dgx-sav__row-val {
+	flex: none;
+	white-space: nowrap;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--dgx-sav-accent);
+}
+
+/* ----- CTA ---------------------------------------------------------------- */
+.dgx-sav__cta {
+	appearance: none;
+	-webkit-appearance: none;
+	min-width: 0;
+	min-height: 0;
+	margin-top: 18px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 14px 22px;
+	border: 0;
+	border-radius: 999px;
+	background: #ffffff;
+	color: #0e1a26;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dgx-sav__cta:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.dgx-sav__cta svg,
+.dgx-sav__cta i {
+	width: 1em;
+	height: 1em;
+	font-size: 1em;
+	fill: #0e1a26;
+}
+
+/* ----- Footnote ----------------------------------------------------------- */
+.dgx-sav__footnote {
+	margin: 18px 0 0;
+	text-align: center;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+/* ----- Responsive --------------------------------------------------------- */
+@media (max-width: 1024px) {
+	.dgx-sav__grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 767px) {
+	.dgx-sav__strip {
+		display: flex;
+		width: 100%;
+	}
+}
+
+/* color-mix fallback for older browsers. */
+@supports not (background: color-mix(in srgb, red, blue)) {
+	.dgx-sav__eyebrow {
+		background: rgba(188, 211, 232, 0.12);
+		border-color: rgba(188, 211, 232, 0.33);
+	}
+
+	.dgx-sav__row-check {
+		background: rgba(188, 211, 232, 0.15);
+	}
+
+	.dgx-sav__strip-val--current {
+		text-decoration-color: rgba(188, 211, 232, 0.67);
+	}
+
+	.dgx-sav__glow--a {
+		background: radial-gradient(circle, rgba(188, 211, 232, 0.25) 0%, transparent 65%);
+	}
+
+	.dgx-sav__glow--b {
+		background: radial-gradient(circle, rgba(188, 211, 232, 0.12) 0%, transparent 65%);
+	}
+}

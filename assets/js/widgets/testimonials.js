@@ -45,6 +45,12 @@
 			return cards[ 0 ].getBoundingClientRect().width + gap;
 		}
 
+		// Left padding on the track (shadow breathing room) — subtracted so a
+		// card snaps flush to the viewport edge, matching the CSS scroll-padding.
+		function padLeft() {
+			return parseFloat( getComputedStyle( track ).paddingLeft ) || 0;
+		}
+
 		// ----- dots -----
 		var dots = [];
 		if ( dotsWrap ) {
@@ -55,7 +61,7 @@
 				dot.className = 'dgx-tst__dot';
 				dot.setAttribute( 'aria-label', 'Go to slide ' + ( i + 1 ) );
 				dot.addEventListener( 'click', function () {
-					viewport.scrollTo( { left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' } );
+					viewport.scrollTo( { left: card.offsetLeft - track.offsetLeft - padLeft(), behavior: 'smooth' } );
 				} );
 				dotsWrap.appendChild( dot );
 				dots.push( dot );
@@ -144,10 +150,58 @@
 		window.addEventListener( 'resize', syncUi );
 	}
 
+	// ----- inline video playback (YouTube / Vimeo / direct file) -----
+	function playVideo( el ) {
+		var url = el.getAttribute( 'data-embed' );
+		var provider = el.getAttribute( 'data-provider' );
+		if ( ! url ) {
+			return;
+		}
+		var node;
+		if ( provider === 'file' ) {
+			node = document.createElement( 'video' );
+			node.src = url;
+			node.controls = true;
+			node.autoplay = true;
+			node.playsInline = true;
+		} else {
+			node = document.createElement( 'iframe' );
+			node.src = url;
+			node.setAttribute( 'allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media' );
+			node.setAttribute( 'allowfullscreen', '' );
+			node.setAttribute( 'title', 'Video' );
+		}
+		node.className = 'dgx-tcard__embed';
+		// Keep the background poster, just drop the play UI and mount the player.
+		var play = el.querySelector( '.dgx-tcard__play' );
+		var label = el.querySelector( '.dgx-tcard__vlabel' );
+		var dur = el.querySelector( '.dgx-tcard__duration' );
+		if ( play ) { play.style.display = 'none'; }
+		if ( label ) { label.style.display = 'none'; }
+		if ( dur ) { dur.style.display = 'none'; }
+		el.appendChild( node );
+		el.classList.add( 'is-playing' );
+	}
+
+	function initVideos( scope ) {
+		var nodes = scope.querySelectorAll( '.dgx-tcard__video[data-embed]' );
+		Array.prototype.forEach.call( nodes, function ( el ) {
+			if ( el.dataset.dgxVid === '1' ) {
+				return;
+			}
+			el.dataset.dgxVid = '1';
+			el.addEventListener( 'click', function ( e ) {
+				e.preventDefault();
+				playVideo( el );
+			} );
+		} );
+	}
+
 	function initAll( ctx ) {
 		var scope = ctx && ctx.querySelectorAll ? ctx : document;
 		var nodes = scope.querySelectorAll( '.dgx-tst--carousel' );
 		Array.prototype.forEach.call( nodes, build );
+		initVideos( scope );
 	}
 
 	if ( document.readyState === 'loading' ) {
