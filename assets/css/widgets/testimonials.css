@@ -1,7 +1,7 @@
 /* =========================================================================
  * Devgraphix — Testimonials
  * A mixed-media testimonial carousel (text / video / before-after / photo),
- * sourced from homepage.html's "Reclaimed Their Confidence" reviews section.
+ * sourced from the reviews section in homepage.html.
  * Dependency-free scroll-snap carousel; JS drives arrows / dots / autoplay.
  * The widget renders cards + nav only — NO wrapper background — so it can sit
  * on any section. Cosmetic defaults match the design; controls override.
@@ -11,6 +11,12 @@
 	--dgx-ease: cubic-bezier(.2, .7, .2, 1);
 	--dgx-tc-gap: 20px;
 	--dgx-tc-per: 3;
+	--dgx-dot-size: 8px;
+	/* Horizontal breathing room on the scroll track so card shadows aren't
+	   clipped. Tied to the gap so the card after the visible N starts exactly
+	   at the window edge — exactly N cards show, with no peeking next card
+	   (the viewport scroll-padding matches this so snapping stays aligned). */
+	--dgx-edge: var(--dgx-tc-gap, 20px);
 	position: relative;
 	box-sizing: border-box;
 }
@@ -26,6 +32,7 @@
 	overflow-x: auto;
 	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
+	scroll-padding: 0 var(--dgx-edge, 22px);
 	scroll-behavior: smooth;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
@@ -40,7 +47,11 @@
 	display: flex;
 	gap: var(--dgx-tc-gap, 20px);
 	align-items: flex-start;
-	padding: 6px 2px;
+	/* A horizontal scroll container clips the cross-axis too, which would
+	   slice off the cards' soft box-shadow. This padding gives the shadow
+	   room to render inside the clip box (and clears the hover lift). The
+	   left/right value is shared with the viewport scroll-padding. */
+	padding: 32px var(--dgx-edge, 22px) 40px;
 }
 
 .dgx-tcard {
@@ -63,10 +74,10 @@
  * Shared footer (avatar + name/location + tag)
  * ========================================================================= */
 .dgx-tcard__body {
-	padding: 20px 22px;
+	padding: 28px 30px 30px;
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
+	gap: var(--dgx-foot-space, 20px);
 }
 
 .dgx-tcard__quote {
@@ -85,25 +96,25 @@
 }
 
 .dgx-tcard__foot {
-	padding-top: 14px;
+	padding-top: var(--dgx-foot-space, 20px);
 	border-top: 1px solid rgba(14, 26, 38, .12);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	gap: 10px;
+	gap: 14px;
 }
 
 .dgx-tcard__person {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 13px;
 	min-width: 0;
 }
 
 .dgx-tcard__avatar {
 	flex: none;
-	width: 36px;
-	height: 36px;
+	width: 46px;
+	height: 46px;
 	border-radius: 999px;
 	background: #dfedfb;
 	color: #435970;
@@ -113,7 +124,7 @@
 	justify-content: center;
 	overflow: hidden;
 	font-family: "Fraunces", Georgia, serif;
-	font-size: 16px;
+	font-size: 20px;
 }
 
 .dgx-tcard__avatar img {
@@ -125,19 +136,21 @@
 .dgx-tcard__id {
 	display: flex;
 	flex-direction: column;
+	gap: 4px;
 	min-width: 0;
 }
 
 .dgx-tcard__name {
 	font-family: "Inter Tight", system-ui, sans-serif;
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 600;
+	line-height: 1.1;
 	color: #0e1a26;
 }
 
 .dgx-tcard__loc {
 	font-family: "DM Mono", ui-monospace, monospace;
-	font-size: 9px;
+	font-size: 10px;
 	letter-spacing: .04em;
 	text-transform: uppercase;
 	color: rgba(14, 26, 38, .62);
@@ -146,7 +159,7 @@
 .dgx-tcard__tag {
 	flex: none;
 	font-family: "DM Mono", ui-monospace, monospace;
-	font-size: 9px;
+	font-size: 10px;
 	letter-spacing: .12em;
 	text-transform: uppercase;
 	color: rgba(14, 26, 38, .62);
@@ -312,7 +325,11 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	padding: 12px;
+	min-height: var(--dgx-ba-label-h, 46px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 12px;
 	text-align: center;
 	background: #7895b3;
 	color: #fff;
@@ -324,8 +341,7 @@
 /* Metric chip — bottom-right over the photo */
 .dgx-tcard__metric {
 	position: absolute;
-	bottom: 14px;
-	right: 14px;
+	z-index: 2;
 	padding: 10px 14px;
 	border-radius: 14px;
 	background: #fff;
@@ -333,6 +349,13 @@
 	box-shadow: 0 12px 28px rgba(14, 26, 38, .18);
 	text-align: right;
 }
+
+/* Chip position — driven by the .dgx-tst--chip-* root class + the
+   --chip-x / --chip-y offset variables (set by the Chip Offset controls). */
+.dgx-tst--chip-bottom-right .dgx-tcard__metric { right: var(--chip-x, 14px); bottom: var(--chip-y, 14px); }
+.dgx-tst--chip-bottom-left  .dgx-tcard__metric { left:  var(--chip-x, 14px); bottom: var(--chip-y, 14px); text-align: left; }
+.dgx-tst--chip-top-right    .dgx-tcard__metric { right: var(--chip-x, 14px); top:    var(--chip-y, 14px); }
+.dgx-tst--chip-top-left     .dgx-tcard__metric { left:  var(--chip-x, 14px); top:    var(--chip-y, 14px); text-align: left; }
 
 .dgx-tcard__metric-val {
 	display: block;
@@ -353,6 +376,14 @@
 	letter-spacing: .12em;
 	text-transform: uppercase;
 	color: rgba(14, 26, 38, .62);
+}
+
+/* On before/after cards a bottom-anchored chip must sit ABOVE the Before/After
+   label bars (those occupy the bottom of the photo), so lift it clear. Top
+   positions need no adjustment. */
+.dgx-tst--chip-bottom-right .dgx-tcard--before_after .dgx-tcard__metric,
+.dgx-tst--chip-bottom-left .dgx-tcard--before_after .dgx-tcard__metric {
+	bottom: calc(var(--chip-y, 14px) + var(--dgx-ba-label-h, 46px));
 }
 
 /* =========================================================================
@@ -434,7 +465,10 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	margin-top: 28px;
+	/* Align with the card edges (the track is inset by its horizontal padding);
+	   the track's bottom padding already supplies the gap above the nav. */
+	margin-top: 4px;
+	padding: 0 22px;
 }
 
 .dgx-tst__dots {
@@ -444,19 +478,32 @@
 	flex-wrap: wrap;
 }
 
-.dgx-tst__dot {
-	width: 8px;
-	height: 8px;
-	border-radius: 999px;
-	border: 0;
+/* Scoped under .dgx-tst__nav and with full button resets so a theme's global
+   `button { min-width / min-height / padding }` can't balloon the dots. */
+.dgx-tst__nav .dgx-tst__dot {
+	-webkit-appearance: none;
+	appearance: none;
+	flex: 0 0 auto;
+	width: var(--dgx-dot-size, 8px);
+	height: var(--dgx-dot-size, 8px);
+	min-width: 0;
+	min-height: 0;
+	max-width: none;
 	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 999px;
 	background: rgba(14, 26, 38, .2);
+	box-shadow: none;
+	line-height: 0;
 	cursor: pointer;
 	transition: width .25s var(--dgx-ease), background .25s var(--dgx-ease);
 }
 
-.dgx-tst__dot.is-active {
-	width: 22px;
+/* Active dot is a short pill — width scales with the dot size. */
+.dgx-tst__nav .dgx-tst__dot.is-active {
+	width: calc(var(--dgx-dot-size, 8px) * 2.75);
+	height: var(--dgx-dot-size, 8px);
 	background: #435970;
 }
 
@@ -502,6 +549,95 @@
 .dgx-tst__arrow svg {
 	width: 18px;
 	height: 18px;
+}
+
+/* =========================================================================
+ * INLINE VIDEO EMBED (YouTube / Vimeo / direct file)
+ * ========================================================================= */
+.dgx-tcard__video--play {
+	cursor: pointer;
+}
+
+.dgx-tcard__embed {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	display: block;
+	background: #000;
+	z-index: 5;
+}
+
+.dgx-tcard__video.is-playing .dgx-tcard__play,
+.dgx-tcard__video.is-playing .dgx-tcard__vlabel,
+.dgx-tcard__video.is-playing .dgx-tcard__duration {
+	display: none;
+}
+
+/* =========================================================================
+ * LAYOUTS
+ * ========================================================================= */
+/* Media on bottom — flip the media/content order for media cards (text cards
+   have no media so they're left as-is). */
+.dgx-tst--layout-media-bottom .dgx-tcard--video,
+.dgx-tst--layout-media-bottom .dgx-tcard--photo,
+.dgx-tst--layout-media-bottom .dgx-tcard--before_after {
+	flex-direction: column-reverse;
+}
+
+/* Overlay — content sits over the media with a dark scrim. Best for Video and
+   Single Photo; Before & After keeps its stacked layout. */
+.dgx-tst--layout-overlay .dgx-tcard--video,
+.dgx-tst--layout-overlay .dgx-tcard--photo {
+	position: relative;
+}
+
+.dgx-tst--layout-overlay .dgx-tcard--video .dgx-tcard__video,
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__photo {
+	position: absolute;
+	inset: 0;
+}
+
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__shot-img--single,
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__shot-ph--single {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: auto;
+}
+
+.dgx-tst--layout-overlay .dgx-tcard--video .dgx-tcard__body,
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__body {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 4;
+	padding-top: 64px;
+	background: linear-gradient(to top, rgba(14, 26, 38, .92) 0%, rgba(14, 26, 38, .72) 55%, transparent 100%);
+}
+
+/* White text for the photo overlay (the video card is already dark). */
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__quote,
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__name {
+	color: #fff;
+}
+
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__loc,
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__tag {
+	color: rgba(255, 255, 255, .6);
+}
+
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__foot {
+	border-top-color: rgba(255, 255, 255, .15);
+}
+
+.dgx-tst--layout-overlay .dgx-tcard--photo .dgx-tcard__avatar {
+	background: rgba(255, 255, 255, .14);
+	border-color: rgba(255, 255, 255, .22);
+	color: #fff;
 }
 
 /* =========================================================================

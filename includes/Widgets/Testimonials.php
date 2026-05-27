@@ -2,8 +2,8 @@
 /**
  * Testimonials widget.
  *
- * A mixed-media testimonial carousel (sourced from homepage.html's "Join
- * Thousands Who've Reclaimed Their Confidence" section). Each slide is one of
+ * A mixed-media testimonial carousel (sourced from the reviews section in
+ * homepage.html). Each slide is one of
  * four card kinds:
  *   - text          — quote-led card (big quote mark + quote + stars + category)
  *   - video         — dark card with a poster/placeholder + play button + duration
@@ -47,7 +47,7 @@ class Testimonials extends Base_Widget {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Testimonials', 'devgraphix-elementor-addons' );
+		return esc_html__( 'Advanced Testimonials', 'devgraphix-elementor-addons' );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class Testimonials extends Base_Widget {
 	 * @return string[]
 	 */
 	public function get_keywords() {
-		return array_merge( parent::get_keywords(), array( 'testimonial', 'review', 'quote', 'carousel', 'slider', 'video', 'before after' ) );
+		return array_merge( parent::get_keywords(), array( 'testimonial', 'advanced', 'review', 'quote', 'carousel', 'slider', 'video', 'youtube', 'vimeo', 'before after' ) );
 	}
 
 	/**
@@ -159,6 +159,7 @@ class Testimonials extends Base_Widget {
 				'duration'     => '0:47',
 				'name'         => esc_html__( 'Alex M.', 'devgraphix-elementor-addons' ),
 				'location'     => esc_html__( 'Lorem City, LC', 'devgraphix-elementor-addons' ),
+				'footer_tag'   => esc_html__( 'Customer', 'devgraphix-elementor-addons' ),
 			),
 			array(
 				'kind'         => 'before_after',
@@ -169,6 +170,7 @@ class Testimonials extends Base_Widget {
 				'metric_label' => esc_html__( 'in 6 months', 'devgraphix-elementor-addons' ),
 				'name'         => esc_html__( 'Jordan P.', 'devgraphix-elementor-addons' ),
 				'location'     => esc_html__( 'Ipsum Town, IT', 'devgraphix-elementor-addons' ),
+				'footer_tag'   => esc_html__( 'Customer', 'devgraphix-elementor-addons' ),
 			),
 			array(
 				'kind'         => 'text',
@@ -177,6 +179,7 @@ class Testimonials extends Base_Widget {
 				'category'     => esc_html__( 'Lorem Ipsum', 'devgraphix-elementor-addons' ),
 				'name'         => esc_html__( 'Sam R.', 'devgraphix-elementor-addons' ),
 				'location'     => esc_html__( 'Dolor City, DC', 'devgraphix-elementor-addons' ),
+				'footer_tag'   => esc_html__( 'Customer', 'devgraphix-elementor-addons' ),
 			),
 		);
 	}
@@ -262,21 +265,22 @@ class Testimonials extends Base_Widget {
 
 		// --- Video ---
 		$item->add_control(
-			'video_poster',
+			'video_link',
 			array(
-				'label'       => esc_html__( 'Video Thumbnail', 'devgraphix-elementor-addons' ),
-				'type'        => Controls_Manager::MEDIA,
-				'description' => esc_html__( 'Leave empty to show a designed placeholder.', 'devgraphix-elementor-addons' ),
+				'label'       => esc_html__( 'Video Link', 'devgraphix-elementor-addons' ),
+				'type'        => Controls_Manager::URL,
+				'placeholder' => 'https://youtu.be/…',
+				'description' => esc_html__( 'YouTube, Vimeo, or a direct .mp4/.webm link. The video plays inline on click.', 'devgraphix-elementor-addons' ),
 				'condition'   => array( 'kind' => 'video' ),
 			)
 		);
 
 		$item->add_control(
-			'video_link',
+			'video_poster',
 			array(
-				'label'       => esc_html__( 'Video Link', 'devgraphix-elementor-addons' ),
-				'type'        => Controls_Manager::URL,
-				'placeholder' => 'https://',
+				'label'       => esc_html__( 'Video Thumbnail', 'devgraphix-elementor-addons' ),
+				'type'        => Controls_Manager::MEDIA,
+				'description' => esc_html__( 'Optional. For YouTube/Vimeo the thumbnail is fetched automatically; upload one to override. Leave empty (and no link) for a designed placeholder.', 'devgraphix-elementor-addons' ),
 				'condition'   => array( 'kind' => 'video' ),
 			)
 		);
@@ -412,6 +416,17 @@ class Testimonials extends Base_Widget {
 			)
 		);
 
+		$item->add_control(
+			'footer_tag',
+			array(
+				'label'       => esc_html__( 'Footer Tag', 'devgraphix-elementor-addons' ),
+				'type'        => Controls_Manager::TEXT,
+				'default'     => esc_html__( 'Customer', 'devgraphix-elementor-addons' ),
+				'description' => esc_html__( 'Small label on the right of this card\'s footer. Leave empty to hide it.', 'devgraphix-elementor-addons' ),
+				'label_block' => true,
+			)
+		);
+
 		$this->add_control(
 			'items',
 			array(
@@ -423,14 +438,31 @@ class Testimonials extends Base_Widget {
 			)
 		);
 
-		$this->add_control(
-			'footer_label',
+		$this->end_controls_section();
+
+		// -------------------------------------------------------------------
+		// Content — Layout
+		// -------------------------------------------------------------------
+		$this->start_controls_section(
+			'section_layout',
 			array(
-				'label'       => esc_html__( 'Footer Tag', 'devgraphix-elementor-addons' ),
-				'type'        => Controls_Manager::TEXT,
-				'default'     => esc_html__( 'Customer', 'devgraphix-elementor-addons' ),
-				'description' => esc_html__( 'Small label shown on the right of each card footer. Leave empty to hide.', 'devgraphix-elementor-addons' ),
-				'separator'   => 'before',
+				'label' => esc_html__( 'Layout', 'devgraphix-elementor-addons' ),
+				'tab'   => Controls_Manager::TAB_CONTENT,
+			)
+		);
+
+		$this->add_control(
+			'card_layout',
+			array(
+				'label'       => esc_html__( 'Card Layout', 'devgraphix-elementor-addons' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => 'media-top',
+				'options'     => array(
+					'media-top'    => esc_html__( 'Media on top', 'devgraphix-elementor-addons' ),
+					'media-bottom' => esc_html__( 'Media on bottom', 'devgraphix-elementor-addons' ),
+					'overlay'      => esc_html__( 'Text over media (overlay)', 'devgraphix-elementor-addons' ),
+				),
+				'description' => esc_html__( 'Applies to Video, Single Photo and Before & After cards. Overlay places the quote over the media (best for Video / Single Photo).', 'devgraphix-elementor-addons' ),
 			)
 		);
 
@@ -599,8 +631,8 @@ class Testimonials extends Base_Widget {
 			)
 		);
 
-		$this->add_typo( 'name_typo', '{{WRAPPER}} .dgx-tcard__name', array( 'font_size' => $this->fs( 13 ), 'font_weight' => array( 'default' => '600' ) ) );
-		$this->add_typo( 'loc_typo', '{{WRAPPER}} .dgx-tcard__loc', array( 'font_size' => $this->fs( 9 ) ) );
+		$this->add_typo( 'name_typo', '{{WRAPPER}} .dgx-tcard__name', array( 'font_size' => $this->fs( 15 ), 'font_weight' => array( 'default' => '600' ) ) );
+		$this->add_typo( 'loc_typo', '{{WRAPPER}} .dgx-tcard__loc', array( 'font_size' => $this->fs( 10 ) ) );
 
 		$this->add_responsive_control(
 			'avatar_size',
@@ -608,13 +640,28 @@ class Testimonials extends Base_Widget {
 				'label'      => esc_html__( 'Avatar Size', 'devgraphix-elementor-addons' ),
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px' ),
-				'range'      => array( 'px' => array( 'min' => 24, 'max' => 64 ) ),
-				'default'    => array( 'unit' => 'px', 'size' => 36 ),
+				'range'      => array( 'px' => array( 'min' => 24, 'max' => 72 ) ),
+				'default'    => array( 'unit' => 'px', 'size' => 46 ),
 				'selectors'  => array( '{{WRAPPER}} .dgx-tcard__avatar' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};' ),
 			)
 		);
 
-		$this->add_typo( 'tag_typo', '{{WRAPPER}} .dgx-tcard__tag', array( 'font_size' => $this->fs( 9 ) ) );
+		$this->add_responsive_control(
+			'footer_gap',
+			array(
+				'label'       => esc_html__( 'Footer Spacing', 'devgraphix-elementor-addons' ),
+				'type'        => Controls_Manager::SLIDER,
+				'size_units'  => array( 'px' ),
+				'range'       => array( 'px' => array( 'min' => 8, 'max' => 48 ) ),
+				'default'     => array( 'unit' => 'px', 'size' => 20 ),
+				'description' => esc_html__( 'Vertical rhythm of the footer — lower for a compact footer, higher for a roomier one.', 'devgraphix-elementor-addons' ),
+				'selectors'   => array(
+					'{{WRAPPER}} .dgx-tcard' => '--dgx-foot-space: {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_typo( 'tag_typo', '{{WRAPPER}} .dgx-tcard__tag', array( 'font_size' => $this->fs( 10 ) ) );
 
 		$this->end_controls_section();
 
@@ -672,6 +719,24 @@ class Testimonials extends Base_Widget {
 		$this->add_color( 'photo_bg', esc_html__( 'Background', 'devgraphix-elementor-addons' ), '{{WRAPPER}} .dgx-tcard--photo, {{WRAPPER}} .dgx-tcard--before_after', '#ffffff', 'background-color' );
 		$this->add_color( 'photo_quote_color', esc_html__( 'Quote Colour', 'devgraphix-elementor-addons' ), '{{WRAPPER}} .dgx-tcard--photo .dgx-tcard__quote, {{WRAPPER}} .dgx-tcard--before_after .dgx-tcard__quote', '#0e1a26' );
 
+		$this->add_responsive_control(
+			'photo_height',
+			array(
+				'label'       => esc_html__( 'Image Height', 'devgraphix-elementor-addons' ),
+				'type'        => Controls_Manager::SLIDER,
+				'size_units'  => array( 'px', 'vh' ),
+				'range'       => array(
+					'px' => array( 'min' => 120, 'max' => 700 ),
+					'vh' => array( 'min' => 10, 'max' => 80 ),
+				),
+				'description' => esc_html__( 'Height of the Before/After and Single Photo image area. Leave empty to keep the natural photo proportions.', 'devgraphix-elementor-addons' ),
+				'selectors'   => array(
+					'{{WRAPPER}} .dgx-tcard__shot' => 'height: {{SIZE}}{{UNIT}}; aspect-ratio: auto;',
+					'{{WRAPPER}} .dgx-tst:not(.dgx-tst--layout-overlay) .dgx-tcard__shot-img--single' => 'height: {{SIZE}}{{UNIT}}; aspect-ratio: auto;',
+				),
+			)
+		);
+
 		$this->add_control(
 			'heading_ba_labels',
 			array(
@@ -698,6 +763,46 @@ class Testimonials extends Base_Widget {
 		$this->add_color( 'metric_val_color', esc_html__( 'Value Colour', 'devgraphix-elementor-addons' ), '{{WRAPPER}} .dgx-tcard__metric-val', '#0e1a26' );
 		$this->add_typo( 'metric_val_typo', '{{WRAPPER}} .dgx-tcard__metric-val', array( 'font_size' => $this->fs( 24 ), 'font_weight' => array( 'default' => '300' ), 'font_style' => array( 'default' => 'italic' ) ) );
 		$this->add_color( 'metric_label_color', esc_html__( 'Caption Colour', 'devgraphix-elementor-addons' ), '{{WRAPPER}} .dgx-tcard__metric-label', 'rgba(14,26,38,0.62)' );
+
+		$this->add_control(
+			'chip_position',
+			array(
+				'label'     => esc_html__( 'Chip Position', 'devgraphix-elementor-addons' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => 'bottom-right',
+				'options'   => array(
+					'top-left'     => esc_html__( 'Top Left', 'devgraphix-elementor-addons' ),
+					'top-right'    => esc_html__( 'Top Right', 'devgraphix-elementor-addons' ),
+					'bottom-left'  => esc_html__( 'Bottom Left', 'devgraphix-elementor-addons' ),
+					'bottom-right' => esc_html__( 'Bottom Right', 'devgraphix-elementor-addons' ),
+				),
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_responsive_control(
+			'chip_offset_x',
+			array(
+				'label'      => esc_html__( 'Chip Offset X', 'devgraphix-elementor-addons' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 120 ) ),
+				'default'    => array( 'unit' => 'px', 'size' => 14 ),
+				'selectors'  => array( '{{WRAPPER}} .dgx-tst' => '--chip-x: {{SIZE}}{{UNIT}};' ),
+			)
+		);
+
+		$this->add_responsive_control(
+			'chip_offset_y',
+			array(
+				'label'      => esc_html__( 'Chip Offset Y', 'devgraphix-elementor-addons' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 120 ) ),
+				'default'    => array( 'unit' => 'px', 'size' => 14 ),
+				'selectors'  => array( '{{WRAPPER}} .dgx-tst' => '--chip-y: {{SIZE}}{{UNIT}};' ),
+			)
+		);
 
 		$this->end_controls_section();
 
@@ -735,6 +840,18 @@ class Testimonials extends Base_Widget {
 				'label'     => esc_html__( 'Dots', 'devgraphix-elementor-addons' ),
 				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
+			)
+		);
+
+		$this->add_responsive_control(
+			'dot_size',
+			array(
+				'label'      => esc_html__( 'Dot Size', 'devgraphix-elementor-addons' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 4, 'max' => 24 ) ),
+				'default'    => array( 'unit' => 'px', 'size' => 8 ),
+				'selectors'  => array( '{{WRAPPER}} .dgx-tst' => '--dgx-dot-size: {{SIZE}}{{UNIT}};' ),
 			)
 		);
 
@@ -780,6 +897,77 @@ class Testimonials extends Base_Widget {
 	}
 
 	/**
+	 * Parse a video URL into provider / inline-embed URL / auto thumbnail.
+	 *
+	 * Supports YouTube, Vimeo and direct video files; anything else is treated
+	 * as a plain link that simply opens.
+	 *
+	 * @param string $url Video URL.
+	 * @return array{provider:string,embed:string,thumb:string}
+	 */
+	private function parse_video( $url ) {
+		$url = trim( (string) $url );
+		$out = array( 'provider' => '', 'embed' => '', 'thumb' => '' );
+
+		if ( '' === $url ) {
+			return $out;
+		}
+
+		// YouTube (watch, youtu.be, embed, shorts).
+		if ( preg_match( '~(?:youtube\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/|v/)|youtu\.be/)([A-Za-z0-9_-]{11})~', $url, $m ) ) {
+			$out['provider'] = 'youtube';
+			$out['embed']    = 'https://www.youtube.com/embed/' . $m[1] . '?autoplay=1&rel=0';
+			$out['thumb']    = 'https://i.ytimg.com/vi/' . $m[1] . '/hqdefault.jpg';
+			return $out;
+		}
+
+		// Vimeo.
+		if ( preg_match( '~vimeo\.com/(?:video/|channels/[A-Za-z0-9]+/|groups/[A-Za-z0-9]+/videos/)?(\d+)~', $url, $m ) ) {
+			$out['provider'] = 'vimeo';
+			$out['embed']    = 'https://player.vimeo.com/video/' . $m[1] . '?autoplay=1';
+			$out['thumb']    = $this->vimeo_thumb( $m[1], $url );
+			return $out;
+		}
+
+		// Direct video file.
+		if ( preg_match( '~\.(mp4|webm|ogg|ogv|mov)(\?.*)?$~i', $url ) ) {
+			$out['provider'] = 'file';
+			$out['embed']    = $url;
+			return $out;
+		}
+
+		$out['provider'] = 'link';
+		return $out;
+	}
+
+	/**
+	 * Resolve a Vimeo thumbnail via oEmbed, cached for a week.
+	 *
+	 * @param string $id  Vimeo video id.
+	 * @param string $url Full Vimeo URL.
+	 * @return string Thumbnail URL (empty on failure).
+	 */
+	private function vimeo_thumb( $id, $url ) {
+		$key    = 'dgx_vimeo_thumb_' . $id;
+		$cached = get_transient( $key );
+		if ( false !== $cached ) {
+			return $cached;
+		}
+
+		$thumb = '';
+		$resp  = wp_remote_get( 'https://vimeo.com/api/oembed.json?url=' . rawurlencode( $url ) . '&width=1280', array( 'timeout' => 5 ) );
+		if ( ! is_wp_error( $resp ) && 200 === (int) wp_remote_retrieve_response_code( $resp ) ) {
+			$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+			if ( ! empty( $data['thumbnail_url'] ) ) {
+				$thumb = $data['thumbnail_url'];
+			}
+		}
+
+		set_transient( $key, $thumb, WEEK_IN_SECONDS );
+		return $thumb;
+	}
+
+	/**
 	 * Render a star row.
 	 *
 	 * @param int $rating Number of filled stars (0-5).
@@ -797,15 +985,16 @@ class Testimonials extends Base_Widget {
 	/**
 	 * Render the shared card footer (avatar + name/location + tag).
 	 *
-	 * @param array<string,mixed> $it    Repeater item.
-	 * @param string               $label Footer tag label.
+	 * @param array<string,mixed> $it Repeater item.
 	 * @return void
 	 */
-	private function render_footer( array $it, $label ) {
+	private function render_footer( array $it ) {
 		$name   = isset( $it['name'] ) ? $it['name'] : '';
 		$loc    = isset( $it['location'] ) ? $it['location'] : '';
 		$avatar = ! empty( $it['avatar']['url'] ) ? $it['avatar']['url'] : '';
 		$initial = '' !== $name ? mb_substr( $name, 0, 1 ) : '';
+		// Per-card footer tag (empty hides it).
+		$tag = isset( $it['footer_tag'] ) ? trim( (string) $it['footer_tag'] ) : '';
 		?>
 		<div class="dgx-tcard__foot">
 			<div class="dgx-tcard__person">
@@ -825,8 +1014,8 @@ class Testimonials extends Base_Widget {
 					<?php endif; ?>
 				</span>
 			</div>
-			<?php if ( '' !== $label ) : ?>
-				<span class="dgx-tcard__tag"><?php echo esc_html( $label ); ?></span>
+			<?php if ( '' !== $tag ) : ?>
+				<span class="dgx-tcard__tag"><?php echo esc_html( $tag ); ?></span>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -857,28 +1046,32 @@ class Testimonials extends Base_Widget {
 	/**
 	 * Render one card.
 	 *
-	 * @param array<string,mixed> $it    Repeater item.
-	 * @param string               $label Footer tag label.
+	 * @param array<string,mixed> $it Repeater item.
 	 * @return void
 	 */
-	private function render_card( array $it, $label ) {
+	private function render_card( array $it ) {
 		$kind  = isset( $it['kind'] ) ? $it['kind'] : 'text';
 		$quote = isset( $it['quote'] ) ? $it['quote'] : '';
 		?>
 		<div class="dgx-tcard dgx-tcard--<?php echo esc_attr( $kind ); ?>">
 			<?php if ( 'video' === $kind ) : ?>
 				<?php
-				$poster = ! empty( $it['video_poster']['url'] ) ? $it['video_poster']['url'] : '';
-				$vlabel = isset( $it['video_label'] ) ? $it['video_label'] : '';
-				$dur    = isset( $it['duration'] ) ? $it['duration'] : '';
-				$vurl   = ! empty( $it['video_link']['url'] ) ? $it['video_link']['url'] : '';
-				$media_tag = '' !== $vurl ? 'a' : 'div';
+				$vlabel     = isset( $it['video_label'] ) ? $it['video_label'] : '';
+				$dur        = isset( $it['duration'] ) ? $it['duration'] : '';
+				$vurl       = ! empty( $it['video_link']['url'] ) ? $it['video_link']['url'] : '';
+				$vid        = $this->parse_video( $vurl );
+				$poster     = ! empty( $it['video_poster']['url'] ) ? $it['video_poster']['url'] : $vid['thumb'];
+				$embeddable = in_array( $vid['provider'], array( 'youtube', 'vimeo', 'file' ), true );
+				$media_tag  = '' !== $vurl ? 'a' : 'div';
 				?>
-				<<?php echo esc_attr( $media_tag ); ?> class="dgx-tcard__video"
+				<<?php echo esc_attr( $media_tag ); ?> class="dgx-tcard__video<?php echo $embeddable ? ' dgx-tcard__video--play' : ''; ?>"
 					<?php if ( '' !== $vurl ) : ?>
 						href="<?php echo esc_url( $vurl ); ?>"
-						<?php echo ! empty( $it['video_link']['is_external'] ) ? ' target="_blank"' : ''; ?>
-						<?php echo ! empty( $it['video_link']['nofollow'] ) ? ' rel="nofollow"' : ''; ?>
+						<?php if ( $embeddable ) : ?>
+							data-embed="<?php echo esc_url( $vid['embed'] ); ?>" data-provider="<?php echo esc_attr( $vid['provider'] ); ?>"
+						<?php else : ?>
+							target="_blank" rel="noopener nofollow"
+						<?php endif; ?>
 					<?php endif; ?>
 					<?php echo '' !== $poster ? ' style="background-image:url(\'' . esc_url( $poster ) . '\');"' : ''; ?>
 				>
@@ -894,7 +1087,7 @@ class Testimonials extends Base_Widget {
 					<?php if ( '' !== $quote ) : ?>
 						<p class="dgx-tcard__quote">&ldquo;<?php echo esc_html( $quote ); ?>&rdquo;</p>
 					<?php endif; ?>
-					<?php $this->render_footer( $it, $label ); ?>
+					<?php $this->render_footer( $it ); ?>
 				</div>
 
 			<?php elseif ( 'before_after' === $kind ) : ?>
@@ -933,7 +1126,7 @@ class Testimonials extends Base_Widget {
 					<?php if ( '' !== $quote ) : ?>
 						<p class="dgx-tcard__quote">&ldquo;<?php echo esc_html( $quote ); ?>&rdquo;</p>
 					<?php endif; ?>
-					<?php $this->render_footer( $it, $label ); ?>
+					<?php $this->render_footer( $it ); ?>
 				</div>
 
 			<?php elseif ( 'photo' === $kind ) : ?>
@@ -950,7 +1143,7 @@ class Testimonials extends Base_Widget {
 					<?php if ( '' !== $quote ) : ?>
 						<p class="dgx-tcard__quote">&ldquo;<?php echo esc_html( $quote ); ?>&rdquo;</p>
 					<?php endif; ?>
-					<?php $this->render_footer( $it, $label ); ?>
+					<?php $this->render_footer( $it ); ?>
 				</div>
 
 			<?php else : ?>
@@ -974,7 +1167,7 @@ class Testimonials extends Base_Widget {
 								<span class="dgx-tcard__cat"><?php echo esc_html( $cat ); ?></span>
 							<?php endif; ?>
 						</div>
-						<?php $this->render_footer( $it, $label ); ?>
+						<?php $this->render_footer( $it ); ?>
 					</div>
 				</div>
 			<?php endif; ?>
@@ -995,15 +1188,18 @@ class Testimonials extends Base_Widget {
 			return;
 		}
 
-		$label       = isset( $s['footer_label'] ) ? $s['footer_label'] : '';
 		$autoplay    = 'yes' === ( isset( $s['autoplay'] ) ? $s['autoplay'] : '' );
 		$loop        = 'yes' === ( isset( $s['loop'] ) ? $s['loop'] : '' );
 		$pause       = 'yes' === ( isset( $s['pause_on_hover'] ) ? $s['pause_on_hover'] : '' );
 		$show_arrows = 'yes' === ( isset( $s['show_arrows'] ) ? $s['show_arrows'] : '' );
 		$show_dots   = 'yes' === ( isset( $s['show_dots'] ) ? $s['show_dots'] : '' );
 		$speed       = isset( $s['autoplay_speed'] ) ? (int) $s['autoplay_speed'] : 6500;
+		$layout      = isset( $s['card_layout'] ) ? $s['card_layout'] : 'media-top';
+		$chip_pos    = isset( $s['chip_position'] ) ? $s['chip_position'] : 'bottom-right';
+
+		$root_classes = array( 'dgx-tst', 'dgx-tst--carousel', 'dgx-tst--layout-' . $layout, 'dgx-tst--chip-' . $chip_pos );
 		?>
-		<div class="dgx-tst dgx-tst--carousel"
+		<div class="<?php echo esc_attr( implode( ' ', $root_classes ) ); ?>"
 			data-autoplay="<?php echo $autoplay ? 'yes' : 'no'; ?>"
 			data-interval="<?php echo esc_attr( $speed ); ?>"
 			data-loop="<?php echo $loop ? 'yes' : 'no'; ?>"
@@ -1011,7 +1207,7 @@ class Testimonials extends Base_Widget {
 			<div class="dgx-tst__viewport">
 				<div class="dgx-tst__track">
 					<?php foreach ( $items as $it ) : ?>
-						<?php $this->render_card( $it, $label ); ?>
+						<?php $this->render_card( $it ); ?>
 					<?php endforeach; ?>
 				</div>
 			</div>

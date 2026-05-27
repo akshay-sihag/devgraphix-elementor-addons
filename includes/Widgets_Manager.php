@@ -38,6 +38,9 @@ class Widgets_Manager {
 		Widgets\Image_Showcase::class,
 		Widgets\Comparison_Table::class,
 		Widgets\Testimonials::class,
+		Widgets\BMI_Calculator::class,
+		Widgets\Savings_Calculator::class,
+		Widgets\Marquee_Text::class,
 	);
 
 	/**

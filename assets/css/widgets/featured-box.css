@@ -44,7 +44,7 @@
 	transform: translateY(-3px);
 }
 
-/* Product lift (HTML .ahc-lift: translateY(-4px), .35s cubic-bezier). */
+/* Product lift (translateY(-4px), .35s cubic-bezier). */
 .dgx-fbox--product {
 	background: #ffffff;
 	border-radius: 32px;
@@ -255,11 +255,17 @@
 	--dgx-cutout-radius: 24px;
 }
 
-.dgx-fbox__product-img {
+/* Scoped under .dgx-fbox--product (two classes) so the default 180px height
+   beats theme rules like `.elementor img { height: auto }` that would
+   otherwise show the packshot at full size and overflow the card. The
+   Packshot Height control ({{WRAPPER}} ..., same specificity but injected
+   later) still overrides this. */
+.dgx-fbox--product .dgx-fbox__product-img {
 	position: relative;
 	display: block;
 	height: 180px;
 	width: auto;
+	max-width: 100%;
 	object-fit: contain;
 	filter:
 		drop-shadow(0 22px 30px rgba(14, 26, 38, 0.28))
@@ -276,6 +282,8 @@
  * ======================================================================== */
 .dgx-fbox--content {
 	background: #dfedfb;
+	display: flex;
+	flex-direction: column;
 }
 
 .dgx-fbox--content .dgx-fbox__content {
@@ -283,6 +291,9 @@
 	z-index: 2;
 	display: flex;
 	flex-direction: column;
+	/* Fill the full card height so the stats row can pin to the bottom
+	   (the card keeps growing if the content is taller than min-height). */
+	flex: 1 1 auto;
 	padding: 36px 32px;
 }
 
@@ -387,7 +398,10 @@
 }
 
 .dgx-fbox__stats {
-	margin-top: 20px;
+	/* `auto` pushes the stats to the bottom of the card and absorbs any free
+	   space above them; when the content is tall, the divider's padding-top
+	   keeps a clean gap. */
+	margin-top: auto;
 	padding-top: 18px;
 	border-top: 1px solid rgba(14, 26, 38, 0.12);
 	display: grid;

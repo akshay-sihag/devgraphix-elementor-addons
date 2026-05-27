@@ -1,0 +1,410 @@
+/* =========================================================================
+ * Devgraphix — BMI Calculator
+ * The interactive two-card BMI calculator core from homepage.html (the Inputs
+ * card + Result card, lines ~2140-2243). No outer wrapper / header / watermark
+ * — the widget is just the two cards so it can drop into any section.
+ * Cosmetic defaults are baked here; Elementor controls override them and carry
+ * matching defaults. The live category colour is driven by the root
+ * `.dgx-bmi--cat-N` class → `--dgx-bmi-active`, so the marker, pill, glow and
+ * recommendation label all recolour from one set of band-colour vars. Fonts use
+ * graceful fallback stacks only (set real fonts via Elementor).
+ * ========================================================================= */
+
+.dgx-bmi {
+	--dgx-bmi-fill: #435970;
+	--dgx-bmi-track: rgba(14, 26, 38, 0.12);
+	--dgx-bmi-thumb: #0e1a26;
+	--dgx-bmi-c0: #7895b3;
+	--dgx-bmi-c1: #1f8a5b;
+	--dgx-bmi-c2: #d4a017;
+	--dgx-bmi-c3: #b34548;
+	--dgx-bmi-marker: 22px;
+	--dgx-bmi-active: var(--dgx-bmi-c1);
+	box-sizing: border-box;
+}
+
+.dgx-bmi *,
+.dgx-bmi *::before,
+.dgx-bmi *::after {
+	box-sizing: border-box;
+}
+
+/* Active band colour — toggled live by the JS via the root class. */
+.dgx-bmi--cat-0 { --dgx-bmi-active: var(--dgx-bmi-c0); }
+.dgx-bmi--cat-1 { --dgx-bmi-active: var(--dgx-bmi-c1); }
+.dgx-bmi--cat-2 { --dgx-bmi-active: var(--dgx-bmi-c2); }
+.dgx-bmi--cat-3 { --dgx-bmi-active: var(--dgx-bmi-c3); }
+
+/* ----- Grid (the two cards) ----------------------------------------------- */
+.dgx-bmi__grid {
+	display: grid;
+	grid-template-columns: 1fr 1.15fr;
+	gap: 24px;
+	align-items: stretch;
+}
+
+.dgx-bmi__panel {
+	padding: 32px;
+	border: 1px solid rgba(14, 26, 38, 0.12);
+	border-radius: 24px;
+	background: #ffffff;
+}
+
+/* ----- Inputs ------------------------------------------------------------- */
+.dgx-bmi__inputs {
+	display: flex;
+	flex-direction: column;
+}
+
+.dgx-bmi__inputs-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 32px;
+}
+
+.dgx-bmi__panel-label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+.dgx-bmi__units {
+	display: flex;
+	flex-shrink: 0;
+	padding: 4px;
+	border-radius: 999px;
+	background: #efe9de;
+}
+
+/* Reset host-theme button defaults so the toggle pills don't balloon. */
+.dgx-bmi__units .dgx-bmi__unit {
+	appearance: none;
+	-webkit-appearance: none;
+	min-width: 0;
+	min-height: 0;
+	margin: 0;
+	border: 0;
+	box-shadow: none;
+	flex: 0 0 auto;
+	padding: 7px 16px;
+	border-radius: 999px;
+	background: transparent;
+	color: rgba(14, 26, 38, 0.62);
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+}
+
+.dgx-bmi__units .dgx-bmi__unit.is-active {
+	background: #0e1a26;
+	color: #ffffff;
+}
+
+/* ----- Sliders ------------------------------------------------------------ */
+.dgx-bmi__slider + .dgx-bmi__slider {
+	margin-top: 32px;
+}
+
+.dgx-bmi__slider-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 14px;
+}
+
+.dgx-bmi__slider-label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: #0e1a26;
+}
+
+.dgx-bmi__slider-value {
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 36px;
+	font-weight: 400;
+	line-height: 1;
+	letter-spacing: -0.01em;
+	color: #0e1a26;
+}
+
+.dgx-bmi__range {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 6px;
+	border-radius: 999px;
+	outline: none;
+	cursor: pointer;
+	background: var(--dgx-bmi-track);
+}
+
+.dgx-bmi__range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 22px;
+	height: 22px;
+	border-radius: 999px;
+	background: var(--dgx-bmi-thumb);
+	border: 3px solid #fff;
+	box-shadow: 0 2px 8px rgba(14, 26, 38, 0.25);
+	cursor: pointer;
+}
+
+.dgx-bmi__range::-moz-range-thumb {
+	width: 22px;
+	height: 22px;
+	border-radius: 999px;
+	background: var(--dgx-bmi-thumb);
+	border: 3px solid #fff;
+	box-shadow: 0 2px 8px rgba(14, 26, 38, 0.25);
+	cursor: pointer;
+}
+
+.dgx-bmi__slider-minmax {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 8px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+.dgx-bmi__disclaimer {
+	margin: 0;
+	margin-top: auto;
+	padding-top: 20px;
+	border-top: 1px solid rgba(14, 26, 38, 0.12);
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 11px;
+	line-height: 1.55;
+	color: rgba(14, 26, 38, 0.62);
+}
+
+/* ----- Result ------------------------------------------------------------- */
+.dgx-bmi__result {
+	position: relative;
+	overflow: hidden;
+}
+
+.dgx-bmi__glow {
+	position: absolute;
+	top: -120px;
+	right: -120px;
+	width: 460px;
+	height: 460px;
+	border-radius: 50%;
+	pointer-events: none;
+	background: radial-gradient(circle, color-mix(in srgb, var(--dgx-bmi-active) 20%, transparent), transparent 60%);
+	transition: background 0.4s;
+}
+
+.dgx-bmi__result-head {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.dgx-bmi__result-label {
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.6);
+}
+
+.dgx-bmi__cat {
+	flex-shrink: 0;
+	white-space: nowrap;
+	padding: 6px 12px;
+	border-radius: 999px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--dgx-bmi-active);
+	background: color-mix(in srgb, var(--dgx-bmi-active) 13%, transparent);
+	border: 1px solid color-mix(in srgb, var(--dgx-bmi-active) 40%, transparent);
+	transition: color 0.3s, background 0.3s, border-color 0.3s;
+}
+
+.dgx-bmi__number {
+	position: relative;
+	margin-top: 18px;
+	font-family: "Fraunces", Georgia, serif;
+	font-size: 168px;
+	font-style: italic;
+	font-weight: 300;
+	line-height: 0.9;
+	letter-spacing: -0.03em;
+	color: #0e1a26;
+}
+
+/* ----- Scale bar ---------------------------------------------------------- */
+.dgx-bmi__scale {
+	position: relative;
+	margin-top: 32px;
+}
+
+.dgx-bmi__bar {
+	position: relative;
+	display: flex;
+	height: 10px;
+	border-radius: 999px;
+}
+
+.dgx-bmi__band {
+	flex: 1;
+}
+
+.dgx-bmi__band--0 {
+	border-radius: 999px 0 0 999px;
+	background: var(--dgx-bmi-c0);
+}
+
+.dgx-bmi__band--1 { background: var(--dgx-bmi-c1); }
+.dgx-bmi__band--2 { background: var(--dgx-bmi-c2); }
+
+.dgx-bmi__band--3 {
+	border-radius: 0 999px 999px 0;
+	background: var(--dgx-bmi-c3);
+}
+
+.dgx-bmi__marker {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: var(--dgx-bmi-marker);
+	height: var(--dgx-bmi-marker);
+	border-radius: 999px;
+	background: #fff;
+	border: 3px solid var(--dgx-bmi-active);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+	transform: translate(-50%, -50%);
+	transition: left 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.3s;
+}
+
+.dgx-bmi__ticks {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 14px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.6);
+}
+
+.dgx-bmi__bands {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	margin-top: 6px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(14, 26, 38, 0.45);
+}
+
+.dgx-bmi__bands span {
+	text-align: center;
+}
+
+/* ----- Recommendation ----------------------------------------------------- */
+.dgx-bmi__rec {
+	margin-top: 28px;
+	padding: 18px;
+	border: 1px solid rgba(14, 26, 38, 0.08);
+	border-radius: 16px;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.dgx-bmi__rec-label {
+	display: block;
+	margin-bottom: 8px;
+	font-family: "DM Mono", ui-monospace, monospace;
+	font-size: 9px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--dgx-bmi-active);
+	transition: color 0.3s;
+}
+
+.dgx-bmi__rec-text {
+	margin: 0;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	line-height: 1.55;
+	color: rgba(14, 26, 38, 0.78);
+}
+
+/* ----- CTA ---------------------------------------------------------------- */
+.dgx-bmi__cta {
+	appearance: none;
+	-webkit-appearance: none;
+	min-width: 0;
+	min-height: 0;
+	margin-top: 18px;
+	width: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 16px 22px;
+	border: 0;
+	border-radius: 999px;
+	background: #0e1a26;
+	color: #ffffff;
+	font-family: "Inter Tight", system-ui, sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dgx-bmi__cta:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 12px 32px rgba(14, 26, 38, 0.3);
+}
+
+.dgx-bmi__cta svg,
+.dgx-bmi__cta i {
+	width: 1em;
+	height: 1em;
+	font-size: 1em;
+	fill: #ffffff;
+}
+
+/* ----- Responsive --------------------------------------------------------- */
+@media (max-width: 1024px) {
+	.dgx-bmi__grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* color-mix fallback for older browsers: keep the pill legible. */
+@supports not (background: color-mix(in srgb, red, blue)) {
+	.dgx-bmi__cat {
+		background: rgba(255, 255, 255, 0.5);
+	}
+
+	.dgx-bmi__glow {
+		background: radial-gradient(circle, rgba(67, 89, 112, 0.2), transparent 60%);
+	}
+}

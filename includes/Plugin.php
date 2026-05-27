@@ -198,6 +198,27 @@ final class Plugin {
 			array(),
 			$this->asset_version( 'assets/css/widgets/testimonials.css' )
 		);
+
+		wp_register_style(
+			'dgx-ea-bmi-calculator',
+			DGX_EA_URL . 'assets/css/widgets/bmi-calculator.css',
+			array(),
+			$this->asset_version( 'assets/css/widgets/bmi-calculator.css' )
+		);
+
+		wp_register_style(
+			'dgx-ea-savings-calculator',
+			DGX_EA_URL . 'assets/css/widgets/savings-calculator.css',
+			array(),
+			$this->asset_version( 'assets/css/widgets/savings-calculator.css' )
+		);
+
+		wp_register_style(
+			'dgx-ea-marquee-text',
+			DGX_EA_URL . 'assets/css/widgets/marquee-text.css',
+			array(),
+			$this->asset_version( 'assets/css/widgets/marquee-text.css' )
+		);
 	}
 
 	/**
@@ -258,6 +279,30 @@ final class Plugin {
 			DGX_EA_URL . 'assets/js/widgets/testimonials.js',
 			array(),
 			$this->asset_version( 'assets/js/widgets/testimonials.js' ),
+			true
+		);
+
+		wp_register_script(
+			'dgx-ea-bmi-calculator',
+			DGX_EA_URL . 'assets/js/widgets/bmi-calculator.js',
+			array(),
+			$this->asset_version( 'assets/js/widgets/bmi-calculator.js' ),
+			true
+		);
+
+		wp_register_script(
+			'dgx-ea-savings-calculator',
+			DGX_EA_URL . 'assets/js/widgets/savings-calculator.js',
+			array(),
+			$this->asset_version( 'assets/js/widgets/savings-calculator.js' ),
+			true
+		);
+
+		wp_register_script(
+			'dgx-ea-marquee-text',
+			DGX_EA_URL . 'assets/js/widgets/marquee-text.js',
+			array(),
+			$this->asset_version( 'assets/js/widgets/marquee-text.js' ),
 			true
 		);
 	}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Devgraphix Elementor Addons
  * Description: Custom-built Elementor widgets and elements by Devgraphix.
- * Version:     1.8.2
+ * Version:     1.12.0
  * Author:      Devgraphix
  * Author URI:  https://devgraphix.com
  * Text Domain: devgraphix-elementor-addons
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-define( 'DGX_EA_VERSION', '1.8.2' );
+define( 'DGX_EA_VERSION', '1.12.0' );
 define( 'DGX_EA_FILE', __FILE__ );
 define( 'DGX_EA_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DGX_EA_URL', plugin_dir_url( __FILE__ ) );
